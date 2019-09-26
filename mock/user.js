@@ -22,6 +22,21 @@ const users = {
   }
 }
 
+const usersData = {
+  "items": [
+    {
+      "userPhoto": "https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg",
+      "loginName": "carter0306",
+      "userName": "伍卡特",
+      "userPhone": "15669252627",
+      "userType": "店长",
+      "userEmail": "carter0306@163.com",
+      "userScore": 100,
+      "createTime": "2019-9-26 13:56:26"
+    }
+    ]
+}
+
 export default [
   // user login
   {
@@ -77,6 +92,21 @@ export default [
       return {
         code: 20000,
         data: 'success'
+      }
+    }
+  },
+
+  {
+    url: '/user/getUsers',
+    type: 'post',
+    response: () => {
+      const items = usersData.items
+      return {
+        code: 20000,
+        data: {
+          total: items.length,
+          items: items
+        }
       }
     }
   }

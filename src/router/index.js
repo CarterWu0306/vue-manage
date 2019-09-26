@@ -32,15 +32,15 @@ export const constantRoutes = [
   },
 
   {
-    path: '/product',
+    path: '/goods',
     component: Layout,
-    redirect: '/product/index',
+    redirect: '/goods/index',
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/product/index'),
-        name: 'Product',
-        meta: { title: '商品管理', icon: 'table' }
+        path: 'user-evaluation.vue',
+        component: () => import('@/views/goods/index'),
+        name: 'Goods',
+        meta: { title: '商品管理', icon: 'shopping' }
       }
     ]
   },
@@ -51,10 +51,38 @@ export const constantRoutes = [
     redirect: '/order/index',
     children: [
       {
-        path: 'index',
+        path: '/order/index',
         component: () => import('@/views/order/index'),
         name: 'Order',
         meta: { title: '订单管理', icon: 'skill' }
+      }
+    ]
+  },
+
+  {
+    path: '/evaluation',
+    component: Layout,
+    redirect: '/evaluation/user-evaluation',
+    children: [
+      {
+        path: 'user-evaluation',
+        component: () => import('@/views/evaluation/user-evaluation'),
+        name: 'Evaluation',
+        meta: { title: '评价管理', icon: 'like'}
+      }
+    ]
+  },
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: '/user/index',
+        component: () => import('@/views/user/index'),
+        name: 'User',
+        meta: { title: '用户管理', icon: 'user' }
       }
     ]
   },

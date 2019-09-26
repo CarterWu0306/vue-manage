@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'X X 后 台 管 理 系 统',
+      title: '餐 饮 销 售 管 理 系 统',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }

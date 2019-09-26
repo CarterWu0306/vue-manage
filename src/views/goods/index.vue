@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.productName" placeholder="商品名称" style="width: 200px;" class="filter-item"/>
-      <el-select v-model="listQuery.productLabel" placeholder="商品标签" clearable style="width: 120px" class="filter-item">
+      <el-input v-model="listQuery.goodsName" placeholder="商品名称" style="width: 200px;" class="filter-item"/>
+      <el-select v-model="listQuery.goodsLabel" placeholder="商品标签" clearable style="width: 120px" class="filter-item">
         <el-option value="招牌菜"/>
       </el-select>
-      <el-select v-model="listQuery.productStatus" placeholder="商品状态" clearable style="width: 120px" class="filter-item">
+      <el-select v-model="listQuery.goodsStatus" placeholder="商品状态" clearable style="width: 120px" class="filter-item">
         <el-option value="已上架"/>
         <el-option value="已下架"/>
       </el-select>
@@ -30,61 +30,89 @@
         </el-table-column>
         <el-table-column
           fixed
-          prop="productName"
+          prop="goodsName"
           label="商品名称"
           width="150"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="productLabel"
+          prop="goodsLabel"
           label="商品标签"
           width="120"
           align="center">
           <template slot-scope="{row}">
             <el-tag>
-              {{ row.productLabel }}
+              {{ row.goodsLabel }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="商品图片" width="150" align="center">
-          <template slot-scope="scope">
+        <el-table-column label="商品图片" width="120" align="center">
+          <template slot-scope="{row}">
             <el-popover
               placement="left"
               trigger="hover">
-              <img :src="scope.row.img" width="420" height="262" alt=""/>
-              <img slot="reference" :src="scope.row.img" width="50" height="30" alt=""/>
+              <img :src="row.goodsImg" width="420" height="262" alt=""/>
+              <img slot="reference" :src="row.goodsImg" width="50" height="30" alt=""/>
             </el-popover>
           </template>
         </el-table-column>
         <el-table-column
-          prop="productPrice"
+          prop="goodsPrice"
           label="商品价格(元)"
           width="120"
           align="center">
           <template slot-scope="{row}">
             <el-tag type="danger">
-              {{ row.productPrice }}￥
+              {{ row.goodsPrice }}￥
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column
-          prop="productDetail"
-          label="详细介绍">
+          prop="goodsDesc"
+          label="商品描述"
+          :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          prop="productCreateTime"
-          label="创建时间"
-          width="200"
+          prop="saleTime"
+          label="上架时间"
+          width="150"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="productStatus"
+          prop="saleNum"
+          label="总销售量"
+          width="120"
+          align="center">
+          <template slot-scope="{row}">
+            <el-tag type="warning">
+              {{ row.saleNum }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="goodsStock"
+          label="商品库存"
+          width="120"
+          align="center">
+          <template slot-scope="{row}">
+            <el-tag type="warning">
+              {{ row.goodsStock }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="goodsStatus"
           label="商品状态"
           width="120"
           align="center">
           <template slot-scope="{row}">
-            <el-tag :type="row.productStatus | statusFilter">
-              {{ row.productStatus }}
+            <el-tag :type="row.goodsStatus | statusFilter">
+              <span v-if="row.goodsStatus==='0'">
+                已下架
+              </span>
+              <span v-if="row.goodsStatus==='1'">
+                已上架
+              </span>
             </el-tag>
           </template>
         </el-table-column>
@@ -97,10 +125,10 @@
             <el-button type="primary" size="mini">
               编辑
             </el-button>
-            <el-button v-if="row.productStatus!='已上架'" size="mini" type="success" @click="handleModifyStatus(row,'已上架')">
+            <el-button v-if="row.goodsStatus!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
               上架
             </el-button>
-            <el-button v-if="row.productStatus!='已下架'" size="mini" @click="handleModifyStatus(row,'已下架')">
+            <el-button v-if="row.goodsStatus!='0'" size="mini" @click="handleModifyStatus(row,'0')">
               下架
             </el-button>
             <el-button size="mini" type="danger">
@@ -117,7 +145,7 @@
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
         @pagination="getList"
-        style="padding: 18px 16px;">
+        style="padding: 20px 16px 0px 16px;">
       </pagination>
 
     <el-dialog :visible.sync="dialogFormVisible">
@@ -141,8 +169,8 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        已上架: 'success',
-        已下架: 'info'
+        1: 'success',
+        0: 'info'
       }
       return statusMap[status]
     }
@@ -154,9 +182,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        productName: undefined,
-        productLabel: undefined,
-        productStatus: undefined
+        goodsName: undefined,
+        goodsLabel: undefined,
+        goodsStatus: undefined
       },
       temp: {
         id: undefined,
@@ -201,12 +229,12 @@ export default {
     handleSelectionChange(val) {
       console.log(val)
     },
-    handleModifyStatus(row, productStatus) {
+    handleModifyStatus(row, goodsStatus) {
       this.$message({
         message: '操作成功',
         type: 'success'
       })
-      row.productStatus = productStatus
+      row.goodsStatus = goodsStatus
     }
   },
   mounted () {
