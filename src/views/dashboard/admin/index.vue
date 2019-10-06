@@ -5,13 +5,13 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart :chartData="lineChartData" :chartColor="lineChartData.lineChatColor" :chartTitle="lineChartData.title"/>
     </el-row>
 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <bar-chart />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -20,20 +20,6 @@
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
         <box-card />
       </el-col>
     </el-row>
@@ -47,26 +33,28 @@ import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
-import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
 
 const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
+  orders: {
+    title: "今日订单量",
+    lineChatColor: "#3888fa",
+    actualData: [280, 160, 151, 106, 145, 150, 120, 82, 91, 154, 162, 140,]
   },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
+  sales: {
+    title: "今日销售额",
+    lineChatColor: "#f55e77",
+    actualData: [120, 90, 100, 138, 142, 130, 120, 82, 91, 154, 162, 140,]
   },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
+  customers: {
+    title: "新增顾客数",
+    lineChatColor: "#34bfa3",
+    actualData: [120, 82, 91, 154, 162, 140, 120, 82, 91, 154, 162, 140,]
   },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
+  goods: {
+    title: "当前商品量",
+    lineChatColor: "#ffb980",
+    actualData: [120, 82, 91, 154, 162, 140, 120, 82, 91, 154, 162, 140,]
   }
 }
 
@@ -79,13 +67,11 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
-    TransactionTable,
-    TodoList,
     BoxCard
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.orders,
     }
   },
   methods: {
@@ -98,7 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
+  padding: 32px 32px 0px 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
 

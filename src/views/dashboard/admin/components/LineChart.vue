@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}"></div>
 </template>
 
 <script>
@@ -28,6 +28,14 @@ export default {
     },
     chartData: {
       type: Object,
+      required: true
+    },
+    chartColor: {
+      type: String,
+      required: true
+    },
+    chartTitle: {
+      type: String,
       required: true
     }
   },
@@ -61,18 +69,23 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
+          data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+          boundaryGap: ['20%', '20%'],
+          axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
           axisTick: {
             show: false
           }
         },
         grid: {
           left: 10,
-          right: 10,
+          right: 20,
           bottom: 20,
           top: 30,
           containLabel: true
@@ -80,43 +93,21 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross'
+            type: 'none'
           },
           padding: [5, 10]
         },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ['expected', 'actual']
-        },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
+        series: [
         {
-          name: 'actual',
+          name: this.chartTitle,
           smooth: true,
-          type: 'line',
+          type: 'bar',
+          //barWidth : 80,
           itemStyle: {
             normal: {
-              color: '#3888fa',
+              color: this.chartColor,
               lineStyle: {
-                color: '#3888fa',
+                color: this.chartColor,
                 width: 2
               },
               areaStyle: {

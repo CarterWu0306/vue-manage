@@ -1,26 +1,29 @@
 <template>
-  <el-card class="box-card-component" style="margin-left:8px;">
-    <div slot="header" class="box-card-header">
-      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
-    </div>
-    <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb" />
-      <mallki class-name="mallki-text" text="vue-element-admin" />
-      <div style="padding-top:35px;" class="progress-item">
-        <span>Vue</span>
-        <el-progress :percentage="70" />
-      </div>
-      <div class="progress-item">
-        <span>JavaScript</span>
-        <el-progress :percentage="18" />
-      </div>
-      <div class="progress-item">
-        <span>Css</span>
-        <el-progress :percentage="12" />
-      </div>
-      <div class="progress-item">
-        <span>ESLint</span>
-        <el-progress :percentage="100" status="success" />
+  <el-card class="box-card-component" style="">
+
+    <div style="position:relative;height: 255px;">
+      <mallki class-name="mallki-text" text="热门商品" style="color: #f4516c;float: left;"/>
+      <div style="padding-top: 45px;">
+        <div class="progress-item">
+          <span>北京烤鸭</span>
+          <el-progress :percentage="this.judgePercentage(100,90)" :color="this.judgeColor(100,90)"></el-progress>
+        </div>
+        <div class="progress-item">
+          <span>水煮肉片</span>
+          <el-progress :percentage="this.judgePercentage(50,90)" :color="this.judgeColor(50,90)"></el-progress>
+        </div>
+        <div class="progress-item">
+          <span>蒜蓉大虾</span>
+          <el-progress :percentage="this.judgePercentage(20,90)" :color="this.judgeColor(20,90)"></el-progress>
+        </div>
+        <div class="progress-item">
+          <span>蒜薹肥肠</span>
+          <el-progress :percentage="this.judgePercentage(20,90)" :color="this.judgeColor(10,90)"></el-progress>
+        </div>
+        <div class="progress-item">
+          <span>随便</span>
+          <el-progress :percentage="this.judgePercentage(10,90)" :color="this.judgeColor(10,90)"></el-progress>
+        </div>
       </div>
     </div>
   </el-card>
@@ -57,6 +60,22 @@ export default {
       'avatar',
       'roles'
     ])
+  },
+  methods: {
+    judgePercentage (value,total) {
+      if ((value/total)*100>=100){
+        return 100
+      }
+      return Math.ceil((value/total)*100)
+    },
+    judgeColor (value,total) {
+      if ((value/total)*100>=100){
+        return "#f55e77"
+      }
+      if ((value/total)*100<=20){
+        return "#ffb980"
+      }
+    }
   }
 }
 </script>

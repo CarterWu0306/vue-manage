@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '283px'
     }
   },
   data() {
@@ -45,6 +45,15 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        title: {
+          text: '客流量时段',
+          x: 'right',
+          textStyle: {
+            fontSize: 20,
+            fontWeight: 'bolder',
+            color: '#f4516c'
+          }
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -52,21 +61,21 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: ['早餐', '午餐', '下午茶', '晚餐', '宵夜']
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '客流量',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
-            center: ['50%', '38%'],
+            center: ['50%', '42%'],
             data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: 320, name: '早餐' },
+              { value: 240, name: '午餐' },
+              { value: 149, name: '下午茶' },
+              { value: 100, name: '晚餐' },
+              { value: 59, name: '宵夜' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
