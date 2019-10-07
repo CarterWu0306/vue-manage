@@ -28,6 +28,7 @@
           </div>
         </div>
       </div>
+      <div class="shop-cart-price" v-show="selectedFoods.length>0">共计￥{{totalPrice}}元</div>
       <span slot="footer" class="dialog-footer">
         <el-button type="success" @click="backContinue">继续点餐</el-button>
         <el-button type="info" @click="empty">清空</el-button>
@@ -75,6 +76,9 @@ export default {
           price += food.price * food.num;
         }
       });
+      if (price===0){
+        this.selectedFoods = []
+      }
       return price;
     }
   },
@@ -207,6 +211,12 @@ export default {
           font-size: 24px;
         }
       }
+    }
+    .shop-cart-price{
+      font-size: 24px;
+      font-weight: 700;
+      color: #3888fa;
+      float: right;
     }
   }
 </style>
