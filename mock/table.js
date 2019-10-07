@@ -23,7 +23,7 @@ const data = {
     "saleNum": 66
   },{
     "goodsName": "特色烤鸭",
-    "goodsLabel": "招牌菜",
+    "goodsLabel": "凉菜",
     "goodsImg": "https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg",
     "goodsPrice": "20",
     "goodsDesc": "测试商品详细介绍测试商品详细介绍测试商品详细介绍测试商品详细介绍测试商品详细介绍测试商品详细介绍测试商品详细介绍测试商品详细介绍",

@@ -27,7 +27,9 @@ const usersData = {
     {
       "userPhoto": "https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg",
       "loginName": "carter0306",
-      "userName": "伍卡特",
+      "userPwd": "123456",
+      "userName": "假装躺在云上好轻松",
+      "realName": "伍卡特",
       "userPhone": "15669252627",
       "userType": "店长",
       "userEmail": "carter0306@163.com",
@@ -107,6 +109,16 @@ export default [
           total: items.length,
           items: items
         }
+      }
+    }
+  },
+
+  {
+    url: '/user/uploadUserPhoto',
+    type: 'post',
+    response: () => {
+      return {
+        code: 20000
       }
     }
   }

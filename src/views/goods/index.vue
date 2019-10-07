@@ -122,7 +122,7 @@
           width="260"
           align="center">
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" @click="edit(row)">
               编辑
             </el-button>
             <el-button v-if="row.goodsStatus!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
@@ -151,6 +151,7 @@
     <el-dialog
       title="新增商品"
       width="600px"
+      @close="resetGoods"
       :visible.sync="dialogFormVisible">
       <el-form ref="dataForm"
                :model="goods"
@@ -162,7 +163,7 @@
           <el-input v-model="goods.goodsName"></el-input>
         </el-form-item>
         <el-form-item label="商品标签:">
-          <el-select v-model="goods.goodsLabel" placeholder="请选择">
+          <el-select v-model="goods.goodsLabel" placeholder="请选择" filterable allow-create>
             <el-option
               v-for="item in allGoodsLabel"
               :key="item.goodsLabel"
@@ -170,7 +171,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商品图片:" style="line-height: 180px;">
+        <el-form-item label="商品图片:">
           <el-upload
             class="avatar-uploader"
             v-model="goods.goodsImg"
@@ -191,11 +192,15 @@
         <el-form-item label="商品库存:">
           <el-input-number v-model="goods.goodsStock" :min="0"></el-input-number>
         </el-form-item>
+        <el-form-item label="总销售量:" v-show="this.dialogFormTitle==='编辑商品'">
+          <el-input-number v-model="goods.saleNum" :min="0"></el-input-number>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button type="success" @click="backContinue">返回</el-button>
           <el-button type="info" @click="empty">清空</el-button>
-          <el-button type="primary">确认新增</el-button>
+          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='新增商品'">确认新增</el-button>
+          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='编辑商品'">确认编辑</el-button>
         </span>
     </el-dialog>
   </div>
@@ -245,8 +250,10 @@ export default {
         goodsDesc: '',
         saleTime: new Date(),
         goodsStock: 0,
+        saleNum: 0
       },
       dialogFormVisible: false,
+      dialogFormTitle: ''
     }
   },
   methods:{
@@ -257,7 +264,20 @@ export default {
         this.tableData = data.items
       })
     },
-    handleCreate () {
+    resetGoods() {
+      this.goods = {
+        goodsName: '',
+        goodsLabel: '',
+        goodsImg: '',
+        goodsPrice: '',
+        goodsDesc: '',
+        saleTime: new Date(),
+        goodsStock: 0,
+        saleNum: 0
+      }
+    },
+    handleCreate() {
+      this.dialogFormTitle = '新增商品';
       this.dialogFormVisible = true
     },
     handleSelectionChange(val) {
@@ -286,16 +306,28 @@ export default {
       return isJPG && isLt2M;
     },
     backContinue() {
-      this.dialogFormVisible = false
+      this.resetGoods();
+      this.dialogFormVisible = false;
     },
     empty() {
-        this.goods.goodsName = '';
-        this.goods.goodsLabel = '';
-        this.goods.goodsImg = '';
-        this.goods.goodsPrice = '';
-        this.goods.goodsDesc = '';
-        this.goods.saleTime = new Date();
-        this.goods.goodsStock = 0;
+      this.resetGoods()
+    },
+    onCommit() {
+
+    },
+    edit(row) {
+      this.dialogFormTitle = '编辑商品';
+      this.dialogFormVisible = true;
+      this.goods = {
+        goodsName: row.goodsName,
+        goodsLabel: row.goodsLabel,
+        goodsImg: row.goodsImg,
+        goodsPrice: row.goodsPrice,
+        goodsDesc: row.goodsDesc,
+        saleTime: row.saleTime,
+        goodsStock: row.goodsStock,
+        saleNum: row.saleNum
+      }
     }
   },
   mounted () {
