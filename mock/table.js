@@ -208,7 +208,8 @@ export default [
         }
       }
     }
-  },{
+  },
+  {
     url: '/table/getOrderList',
     type: 'get',
     response: () => {
@@ -219,6 +220,15 @@ export default [
           total: items.length,
           items: items
         }
+      }
+    }
+  },
+  {
+    url: '/table/uploadGoodsImg',
+    type: 'post',
+    response: () => {
+      return {
+        code: 20000
       }
     }
   }

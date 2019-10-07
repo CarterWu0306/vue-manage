@@ -139,21 +139,64 @@
       </el-table>
     </div>
 
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
-        style="padding: 20px 16px 0px 16px;">
-      </pagination>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+      style="padding: 20px 16px 0px 16px;">
+    </pagination>
 
-    <el-dialog :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Title" prop="title">
-          <el-input/>
+    <el-dialog
+      title="新增商品"
+      width="600px"
+      :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm"
+               :model="goods"
+               label-position="left"
+               label-width="80px"
+               style="width: 350px; margin-left:50px;"
+               @submit.native.prevent>
+        <el-form-item label="商品名称:">
+          <el-input v-model="goods.goodsName"></el-input>
+        </el-form-item>
+        <el-form-item label="商品标签:">
+          <el-select v-model="goods.goodsLabel" placeholder="请选择">
+            <el-option
+              v-for="item in allGoodsLabel"
+              :key="item.goodsLabel"
+              :value="item.goodsLabel">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商品图片:" style="line-height: 180px;">
+          <el-upload
+            class="avatar-uploader"
+            v-model="goods.goodsImg"
+            action="mock/table/uploadGoodsImg"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="goods.goodsImg" :src="goods.goodsImg" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="商品描述:">
+          <el-input type="textarea" v-model="goods.goodsDesc"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格:">
+          <el-input-number v-model="goods.goodsPrice" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="商品库存:">
+          <el-input-number v-model="goods.goodsStock" :min="0"></el-input-number>
         </el-form-item>
       </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button type="success" @click="backContinue">返回</el-button>
+          <el-button type="info" @click="empty">清空</el-button>
+          <el-button type="primary">确认新增</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
@@ -179,6 +222,14 @@ export default {
     return {
       tableData: [],
       total: 0,
+      allGoodsLabel: [
+        {
+          goodsLabel: '招牌菜'
+        },
+        {
+          goodsLabel: '凉菜'
+        }
+      ],
       listQuery: {
         page: 1,
         limit: 20,
@@ -186,17 +237,16 @@ export default {
         goodsLabel: undefined,
         goodsStatus: undefined
       },
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
+      goods: {
+        goodsName: '',
+        goodsLabel: '',
+        goodsImg: '',
+        goodsPrice: '',
+        goodsDesc: '',
+        saleTime: new Date(),
+        goodsStock: 0,
       },
       dialogFormVisible: false,
-      dialogStatus: ''
     }
   },
   methods:{
@@ -207,24 +257,8 @@ export default {
         this.tableData = data.items
       })
     },
-    resetTemp () {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
-    },
     handleCreate () {
-      this.resetTemp()
-      this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
     },
     handleSelectionChange(val) {
       console.log(val)
@@ -235,6 +269,33 @@ export default {
         type: 'success'
       })
       row.goodsStatus = goodsStatus
+    },
+    handleAvatarSuccess(res, file) {
+      this.goods.goodsImg = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    backContinue() {
+      this.dialogFormVisible = false
+    },
+    empty() {
+        this.goods.goodsName = '';
+        this.goods.goodsLabel = '';
+        this.goods.goodsImg = '';
+        this.goods.goodsPrice = '';
+        this.goods.goodsDesc = '';
+        this.goods.saleTime = new Date();
+        this.goods.goodsStock = 0;
     }
   },
   mounted () {
@@ -243,6 +304,30 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .avatar-uploader {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 180px;
+    height: 180px;
+  }
+  .avatar-uploader:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 180px;
+    height: 180px;
+    line-height: 180px;
+    text-align: center;
+  }
+  .avatar {
+    width: 180px;
+    height: 180px;
+    display: block;
+  }
 </style>

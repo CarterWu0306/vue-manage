@@ -41,6 +41,7 @@ export default {
     border-radius: 10%;
   }
   .image {
+    user-select: none;
     width: 360px;
     height: 320px;
     display: block;
@@ -54,14 +55,17 @@ export default {
     font-weight: 600;
   }
   .food-price{
+    user-select: none;
     font-size: 24px;
     font-weight: 700;
     color: #ffb980;
   }
   .button {
+    user-select: none;
     font-size: 30px;
   }
   .button-count {
+    user-select: none;
     font-size: 25px;
   }
 </style>
