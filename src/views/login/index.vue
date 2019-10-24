@@ -26,7 +26,10 @@
         <div class="login-block">
           <div class="login-container">
             <div class="login-block">
-              <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+              <el-form ref="loginForm"
+                       :model="loginForm"
+                       :rules="loginRules"
+                       class="login-form" auto-complete="on" label-position="left">
                 <div class="title-container">
                   <h3 class="title">后台管理系统</h3>
                 </div>

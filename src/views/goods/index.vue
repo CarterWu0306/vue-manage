@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.goodsName" placeholder="商品名称" style="width: 200px;" class="filter-item"/>
+      <el-input v-model="listQuery.goodsName" placeholder="商品名称" style="width: 200px;" class="filter-item"></el-input>
       <el-select v-model="listQuery.goodsLabel" placeholder="商品标签" clearable style="width: 120px" class="filter-item">
-        <el-option value="招牌菜"/>
+        <el-option value="招牌菜"></el-option>
       </el-select>
       <el-select v-model="listQuery.goodsStatus" placeholder="商品状态" clearable style="width: 120px" class="filter-item">
-        <el-option value="已上架"/>
-        <el-option value="已下架"/>
+        <el-option value="0" label="已下架"></el-option>
+        <el-option value="1" label="已上架"></el-option>
       </el-select>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="getList">
         搜索
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
@@ -24,10 +24,6 @@
         border
         style="width: 100%"
         @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
         <el-table-column
           fixed
           prop="goodsName"
@@ -73,8 +69,9 @@
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          prop="saleTime"
+          prop="createTime"
           label="上架时间"
+          :formatter="dateFormat"
           width="150"
           align="center">
         </el-table-column>
@@ -107,10 +104,10 @@
           align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.goodsStatus | statusFilter">
-              <span v-if="row.goodsStatus==='0'">
+              <span v-if="row.goodsStatus === '0'">
                 已下架
               </span>
-              <span v-if="row.goodsStatus==='1'">
+              <span v-if="row.goodsStatus === '1'">
                 已上架
               </span>
             </el-tag>
@@ -125,13 +122,13 @@
             <el-button type="primary" size="mini" @click="edit(row)">
               编辑
             </el-button>
-            <el-button v-if="row.goodsStatus!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
+            <el-button v-if="row.goodsStatus!= '1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
               上架
             </el-button>
-            <el-button v-if="row.goodsStatus!='0'" size="mini" @click="handleModifyStatus(row,'0')">
+            <el-button v-if="row.goodsStatus!= '0'" size="mini" @click="handleModifyStatus(row,'0')">
               下架
             </el-button>
-            <el-button size="mini" type="danger">
+            <el-button size="mini" type="danger" @click="deleteRow(row)">
               删除
             </el-button>
           </template>
@@ -153,17 +150,31 @@
       width="600px"
       @close="resetGoods"
       :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm"
-               :model="goods"
-               label-position="left"
-               label-width="80px"
+      <el-dialog
+        width="30%"
+        title="识别结果"
+        :visible.sync="recognizeVisible"
+        append-to-body>
+        <span v-for="item in recognizeResult" :key="item.probability">
+          <el-button type="primary" plain @click="recognizeResultClick(item.name)" style="margin-right: 20px;margin-bottom: 10px;">{{item.name}}</el-button>
+        </span>
+      </el-dialog>
+      <el-form ref="goodsForm"
+               :rules="goodsFormRules"
+               :model="goodsForm"
+               label-position="right"
+               label-width="85px"
                style="width: 350px; margin-left:50px;"
                @submit.native.prevent>
-        <el-form-item label="商品名称:">
-          <el-input v-model="goods.goodsName"></el-input>
+        <el-form-item
+          prop="goodsName"
+          label="商品名称:">
+          <el-input v-model="goodsForm.goodsName"></el-input>
         </el-form-item>
-        <el-form-item label="商品标签:">
-          <el-select v-model="goods.goodsLabel" placeholder="请选择" filterable allow-create>
+        <el-form-item
+          prop="goodsLabel"
+          label="商品标签:">
+          <el-select v-model="goodsForm.goodsLabel" placeholder="请选择" filterable allow-create>
             <el-option
               v-for="item in allGoodsLabel"
               :key="item.goodsLabel"
@@ -174,41 +185,44 @@
         <el-form-item label="商品图片:">
           <el-upload
             class="avatar-uploader"
-            v-model="goods.goodsImg"
-            action="mock/table/uploadGoodsImg"
+            v-model="goodsForm.goodsImg"
+            action="imgUpload/goods/uploadAndReconizeImage"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="goods.goodsImg" :src="goods.goodsImg" class="avatar">
+            <img v-if="goodsForm.goodsImg" :src="goodsForm.goodsImg" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="商品描述:">
-          <el-input type="textarea" v-model="goods.goodsDesc"></el-input>
+          <el-input type="textarea" v-model="goodsForm.goodsDesc"></el-input>
         </el-form-item>
-        <el-form-item label="商品价格:">
-          <el-input-number v-model="goods.goodsPrice" :min="0"></el-input-number>
+        <el-form-item
+          prop="goodsPrice"
+          label="商品价格:">
+          <el-input-number v-model="goodsForm.goodsPrice" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="商品库存:">
-          <el-input-number v-model="goods.goodsStock" :min="0"></el-input-number>
+          <el-input-number v-model="goodsForm.goodsStock" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="总销售量:" v-show="this.dialogFormTitle==='编辑商品'">
-          <el-input-number v-model="goods.saleNum" :min="0"></el-input-number>
+          <el-input-number v-model="goodsForm.saleNum" :min="0"></el-input-number>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button type="success" @click="backContinue">返回</el-button>
           <el-button type="info" @click="empty">清空</el-button>
-          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='新增商品'">确认新增</el-button>
-          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='编辑商品'">确认编辑</el-button>
-        </span>
+          <el-button type="primary" @click="addGoods" :loading="loading" v-show="this.dialogFormTitle==='新增商品'">确认新增</el-button>
+          <el-button type="primary" @click="editGoods" :loading="loading" v-show="this.dialogFormTitle==='编辑商品'">确认编辑</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getList } from '@/api/table'
+import moment from 'moment'
+import { getList, addGoods, updateGoods, changeGoodsStatus, deleteGoods } from '@/api/goods'
 export default {
   name: "Product",
   components: {
@@ -217,13 +231,27 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        1: 'success',
-        0: 'info'
+        0: 'info',
+        1: 'success'
       }
       return statusMap[status]
     }
   },
   data () {
+    const validateData = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('该项不能为空'))
+      } else {
+        callback()
+      }
+    }
+    const validatePrice = (rule, value, callback) => {
+      if (!value && value === 0) {
+        callback(new Error('价格必须大于0'))
+      } else {
+        callback()
+      }
+    }
     return {
       tableData: [],
       total: 0,
@@ -238,11 +266,11 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        goodsName: undefined,
-        goodsLabel: undefined,
-        goodsStatus: undefined
+        goodsName: '',
+        goodsLabel: '',
+        goodsStatus: ''
       },
-      goods: {
+      goodsForm: {
         goodsName: '',
         goodsLabel: '',
         goodsImg: '',
@@ -252,20 +280,82 @@ export default {
         goodsStock: 0,
         saleNum: 0
       },
+      goodsFormRules: {
+        goodsName: [{required: true, trigger: 'blur', validator: validateData}],
+        goodsLabel: [{required: true, trigger: 'change', validator: validateData}],
+        goodsPrice: [{required: true, trigger: 'change', validator: validatePrice}]
+      },
+      recognizeResult: [],
+      loading: false,
       dialogFormVisible: false,
+      recognizeVisible: false,
       dialogFormTitle: ''
     }
   },
   methods:{
+    dateFormat (row, column){
+      var date = row[column.property]
+      if(date === undefined){
+        return ''
+      }
+      return moment(date).format("YYYY-MM-DD")
+    },
     getList () {
       getList(this.listQuery).then(response => {
-        const data = response.data
-        this.total = data.total
-        this.tableData = data.items
+        this.total = response.total
+        this.tableData = response.data
+      })
+    },
+    addGoods () {
+      this.$refs.goodsForm.validate(valid =>{
+        if (valid){
+          this.loading = true
+          addGoods(this.goodsForm).then(response =>{
+            this.loading = false
+            this.dialogFormVisible = false
+            this.$message({
+              message: response.message,
+              type: 'success'
+            })
+            this.getList()
+          }).catch(() => {
+            this.loading = false
+            this.$message({
+              message: response.message,
+              type: 'error'
+            })
+          })
+        }else {
+          return false
+        }
+      })
+    },
+    editGoods () {
+      this.$refs.goodsForm.validate(valid =>{
+        if (valid){
+          this.loading = true
+          updateGoods(this.goodsForm).then(response =>{
+            this.loading = false
+            this.dialogFormVisible = false
+            this.$message({
+              message: response.message,
+              type: 'success'
+            })
+            this.getList()
+          }).catch(() => {
+            this.loading = false
+            this.$message({
+              message: response.message,
+              type: 'error'
+            })
+          })
+        }else {
+          return false
+        }
       })
     },
     resetGoods() {
-      this.goods = {
+      this.goodsForm = {
         goodsName: '',
         goodsLabel: '',
         goodsImg: '',
@@ -284,26 +374,41 @@ export default {
       console.log(val)
     },
     handleModifyStatus(row, goodsStatus) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
+      //修改上下架请求接口
+      changeGoodsStatus({ goodsId: row.goodsId, goodsStatus: goodsStatus }).then(response =>{
+        row.goodsStatus = goodsStatus
+        this.$message({
+          message: response.message,
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$message({
+          message: response.message,
+          type: 'error'
+        })
       })
-      row.goodsStatus = goodsStatus
     },
+    //图像上传识别成功回调
     handleAvatarSuccess(res, file) {
-      this.goods.goodsImg = URL.createObjectURL(file.raw);
+      this.goodsForm.goodsImg = res.data.ImgURL;
+      this.recognizeResult = res.data.result;
+      this.recognizeVisible = true;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPGorPng = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
+      if (!isJPGorPng) {
         this.$message.error('上传图片只能是 JPG 格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isJPGorPng && isLt2M;
+    },
+    recognizeResultClick(name) {
+      this.goodsForm.goodsName = name;
+      this.recognizeVisible = false;
     },
     backContinue() {
       this.resetGoods();
@@ -312,13 +417,11 @@ export default {
     empty() {
       this.resetGoods()
     },
-    onCommit() {
-
-    },
     edit(row) {
       this.dialogFormTitle = '编辑商品';
       this.dialogFormVisible = true;
-      this.goods = {
+      this.goodsForm = {
+        goodsId: row.goodsId,
         goodsName: row.goodsName,
         goodsLabel: row.goodsLabel,
         goodsImg: row.goodsImg,
@@ -326,8 +429,35 @@ export default {
         goodsDesc: row.goodsDesc,
         saleTime: row.saleTime,
         goodsStock: row.goodsStock,
+        goodsStatus: row.goodsStatus,
         saleNum: row.saleNum
       }
+    },
+    deleteRow(row){
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(response => {
+        deleteGoods({ goodsId: row.goodsId }).then(response =>{
+          this.$message({
+            message: response.message,
+            type: 'success'
+          })
+          this.getList()
+        }).catch(() => {
+          this.loading = false
+          this.$message({
+            message: response.message,
+            type: 'error'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   },
   mounted () {

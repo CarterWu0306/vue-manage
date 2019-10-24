@@ -10,7 +10,10 @@ import '@/styles/index.scss' // global css
 
 import App from './App'
 import store from './store'
+import VueResource from 'vue-resource'
 import router from './router'
+
+Vue.use(VueResource);
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -39,6 +42,9 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+// 这两个需要设置，不然前端向后台不能传递数据
+Vue.http.options.emulateJSON = true
+Vue.http.options.emulateHTTP = true
 
 new Vue({
   el: '#app',

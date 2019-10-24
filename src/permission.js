@@ -32,7 +32,13 @@ router.beforeEach(async(to, from, next) => {
       } else {
         try {
           // get user info
-          const { roles } = await store.dispatch('user/getInfo')
+          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          const { roleList } = await store.dispatch('user/getInfo')
+          const roles = []
+          roleList.forEach(index =>{
+            roles.push(index.roleCode)
+          })
+
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login

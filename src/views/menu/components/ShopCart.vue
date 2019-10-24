@@ -12,9 +12,10 @@
         <el-button type="primary" class="pay-button" @click="handleCreate">结算</el-button>
       </div>
     </div>
+
     <el-dialog
       width="25%"
-      title="购物车"
+      title="结算"
       :visible.sync="dialogFormVisible">
       <div class="dialog">
         <span class="shop-cart-empty" v-show="!selectedFoods.length>0">当前购物车为空</span>
@@ -28,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="shop-cart-price" v-show="selectedFoods.length>0">共计￥{{totalPrice}}元</div>
+      <div class="shop-cart-price" v-show="selectedFoods.length>0">小计￥{{totalPrice}}元</div>
       <span slot="footer" class="dialog-footer">
         <el-button type="success" @click="backContinue">继续点餐</el-button>
         <el-button type="info" @click="empty">清空</el-button>
@@ -140,13 +141,13 @@ export default {
           border-radius: 50%;
           text-align: center;
           background: #20A0FF;
-
           .shop-cart-icon {
             font-size: 60px;
             margin-top: 10px;
           }
         }
         .num {
+          user-select: none;
           position: absolute;
           top: 0;
           right: 0;
@@ -163,6 +164,7 @@ export default {
         }
       }
       .price{
+        user-select: none;
         display: inline-block;
         color: #fff;
         margin-top: 15px;
@@ -170,6 +172,7 @@ export default {
         font-weight: 700;
       }
       .pay{
+        user-select: none;
         float: right;
         width: 200px;
         height: 79px;
@@ -194,6 +197,7 @@ export default {
         line-height: 40px;
       }
       .label{
+        user-select: none;
         .food-name{
           font-size: 24px;
           font-weight: 600;
@@ -213,6 +217,7 @@ export default {
       }
     }
     .shop-cart-price{
+      user-select: none;
       font-size: 24px;
       font-weight: 700;
       color: #3888fa;

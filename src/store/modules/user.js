@@ -50,7 +50,11 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar } = data
+        const { roleList, nickName, avatar } = data
+        const roles = []
+        roleList.forEach(index =>{
+          roles.push(index.roleCode)
+        })
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -58,8 +62,13 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', nickName)
+        //设置头像
+        if (avatar === ''){
+          commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+        }else{
+          commit('SET_AVATAR', avatar)
+        }
         resolve(data)
       }).catch(error => {
         reject(error)
