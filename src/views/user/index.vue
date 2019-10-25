@@ -1,11 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.loginName" placeholder="用户帐号" style="width: 200px;" class="filter-item"/>
-      <el-input v-model="listQuery.userPhone" placeholder="手机号" style="width: 200px;" class="filter-item"/>
-      <el-select v-model="listQuery.userType" placeholder="用户类型" clearable style="width: 120px" class="filter-item">
-        <el-option value="门店用户"/>
-        <el-option value="会员用户"/>
+      <el-input v-model="listQuery.loginName" placeholder="用户帐号" style="width: 200px;" class="filter-item"></el-input>
+      <el-input v-model="listQuery.userPhone" placeholder="手机号" style="width: 200px;" class="filter-item"></el-input>
+      <el-select v-model="listQuery.roleName" placeholder="用户类型" clearable style="width: 120px" class="filter-item">
+        <el-option value="1" label="普通会员"></el-option>
+        <el-option value="2" label="店员"></el-option>
+        <el-option value="2" label="店长"></el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search">
         搜索
@@ -37,13 +38,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="loginName"
+          prop="username"
           label="用户帐号"
           width="220"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="userName"
+          prop="nickName"
           label="用户名称"
           width="200"
           align="center">
@@ -61,7 +62,7 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="userType"
+          prop="role.roleName"
           label="用户类型"
           width="100"
           align="center">
@@ -121,47 +122,48 @@
       @close="resetUser"
       :visible.sync="dialogFormVisible">
       <el-form ref="dataForm"
-               :model="user"
+               :model="userForm"
                label-position="left"
                label-width="80px"
                style="width: 350px; margin-left:50px;"
                @submit.native.prevent>
         <el-form-item label="用户帐号:">
-          <el-input v-model="user.loginName"></el-input>
+          <el-input v-model="userForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密   码:">
-          <el-input v-model="user.userPwd" type="password"></el-input>
+          <el-input v-model="userForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="用户名称:">
-          <el-input v-model="user.userName"></el-input>
+          <el-input v-model="userForm.nickName"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名:">
-          <el-input v-model="user.realName"></el-input>
+          <el-input v-model="userForm.realName"></el-input>
         </el-form-item>
         <el-form-item label="手机号码:">
-          <el-input v-model="user.userPhone" maxlength="11"></el-input>
+          <el-input v-model="userForm.userPhone" maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="用户类型:">
-          <el-select v-model="user.userType" placeholder="请选择" filterable allow-create>
+          <el-select v-model="userForm.userType" placeholder="请选择" filterable allow-create>
             <el-option
-              v-for="item in allUserType"
-              :key="item.userType"
-              :value="item.userType">
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.id"
+              :value="item.roleName">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="邮箱地址:">
-          <el-input v-model="user.userEmail"></el-input>
+          <el-input v-model="userForm.userEmail"></el-input>
         </el-form-item>
         <el-form-item label="用户头像:">
           <el-upload
             class="avatar-uploader"
-            v-model="user.userPhoto"
-            action="mock/user/uploadUserPhoto"
+            v-model="userForm.avatar"
+            action="imgUpload/user/uploadUserImage"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="user.userPhoto" :src="user.userPhoto" class="avatar">
+            <img v-if="userForm.avatar" :src="userForm.avatar" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -200,30 +202,33 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        loginName: undefined,
-        userPhone: undefined,
-        userType: undefined
-      },
-      user: {
         loginName: '',
-        userPwd: '',
-        userName: '',
+        userPhone: '',
+        roleName: ''
+      },
+      userForm: {
+        username: '',
+        password: '',
+        nickName: '',
         realName: '',
         userPhone: '',
         userType: '',
-        userPhoto: '',
+        avatar: '',
         userEmail: '',
         createTime: new Date()
       },
-      allUserType:[
+      roleList:[
         {
-          userType: '店长'
+          id: 1,
+          roleName: '店长'
         },
         {
-          userType: '店员'
+          id: 2,
+          roleName: '店员'
         },
         {
-          userType: '普通会员'
+          id: 3,
+          roleName: '普通会员'
         }
       ],
       dialogFormVisible: false,
@@ -239,18 +244,19 @@ export default {
       })
     },
     resetUser () {
-      this.user = {
-        loginName: '',
-        userPwd: '',
-        userName: '',
+      this.userForm = {
+        username: '',
+        password: '',
+        nickName: '',
         userPhone: '',
         userType: '',
-        userPhoto: '',
+        avatar: '',
         userEmail: '',
         createTime: new Date()
       }
     },
     handleCreate () {
+      // 调用获取用户类型下拉框接口
       this.dialogFormTitle = '新增用户';
       this.dialogFormVisible = true
     },
@@ -265,19 +271,19 @@ export default {
       row.goodsStatus = goodsStatus
     },
     handleAvatarSuccess(res, file) {
-      this.user.userPhoto = URL.createObjectURL(file.raw);
+      this.userForm.avatar = res.data.avatar;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPGorPng = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG 格式!');
+      if (!isJPGorPng) {
+        this.$message.error('上传图片只能是 JPG、PNG 格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isJPGorPng && isLt2M;
     },
     backContinue() {
       this.resetUser();
@@ -292,13 +298,13 @@ export default {
     edit(row) {
       this.dialogFormTitle = '编辑用户';
       this.dialogFormVisible = true;
-      this.user = {
-        loginName: row.loginName,
-        userPwd: row.userPwd,
-        userName: row.userName,
+      this.userForm = {
+        username: row.username,
+        password: row.password,
+        nickName: row.nickName,
         realName: row.realName,
         userPhone: row.userPhone,
-        userType: row.userType,
+        userType: row.role.roleName.id,
         userPhoto: row.userPhoto,
         userEmail: row.userEmail,
         createTime: row.createTime
