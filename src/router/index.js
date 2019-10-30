@@ -27,7 +27,10 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '商家首页', icon: 'dashboard' }
+      meta: {
+        title: '商家首页',
+        icon: 'dashboard'
+      }
     }]
   },
 
@@ -40,7 +43,7 @@ export const constantRoutes = [
         path: '/menu/index',
         component: () => import('@/views/menu/index'),
         name: 'Foods',
-        meta: { title: '点餐', icon: 'menu' }
+        meta: { title: '点餐', icon: 'menu', }
       }
     ]
   },
@@ -82,21 +85,7 @@ export const constantRoutes = [
         path: 'user-evaluation',
         component: () => import('@/views/evaluation/user-evaluation'),
         name: 'Evaluation',
-        meta: { title: '评价管理', icon: 'like'}
-      }
-    ]
-  },
-
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/index',
-    children: [
-      {
-        path: '/user/index',
-        component: () => import('@/views/user/index'),
-        name: 'User',
-        meta: { title: '用户管理', icon: 'user' }
+        meta: { title: '评价管理', icon: 'like' }
       }
     ]
   },
@@ -106,6 +95,26 @@ export const constantRoutes = [
     path: '*',
     redirect: '/404',
     hidden: true
+  }
+]
+
+export const asyncRoutes = [
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: '/user/index',
+        component: () => import('@/views/user/index'),
+        name: 'User',
+        meta: {
+          title: '用户管理',
+          icon: 'user',
+          roles: ['ROLE_MANAGER']
+        }
+      }
+    ]
   }
 ]
 
