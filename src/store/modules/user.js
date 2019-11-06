@@ -4,6 +4,7 @@ import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  userId: '',
   name: '',
   avatar: '',
   roles: []
@@ -12,6 +13,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_USERID: (state, userId) => {
+    state.userId = userId
   },
   SET_NAME: (state, name) => {
     state.name = name
@@ -50,7 +54,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roleList, nickName, avatar } = data
+        const { roleList, nickName, avatar, userId } = data
         const roles = []
         roleList.forEach(index =>{
           roles.push(index.roleCode)
@@ -62,6 +66,7 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
+        commit('SET_USERID', userId)
         commit('SET_NAME', nickName)
         //设置头像
         if (avatar === ''){
