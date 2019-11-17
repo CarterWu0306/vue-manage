@@ -5,7 +5,7 @@
         店铺评分
       </div>
       <div class="score">
-        {{value}}
+        {{value.toFixed(1)}}
       </div>
       <div class="star" >
         <el-rate
