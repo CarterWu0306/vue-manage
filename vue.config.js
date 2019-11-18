@@ -36,7 +36,7 @@ module.exports = {
     proxy: {
       //本地接口测试
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:9999`,
+        target: `http://localhost:9800`,
         ws: false,
         changeOrigin: true,
         pathRewrite: {
@@ -45,7 +45,7 @@ module.exports = {
       },
       //图片上传接口代理
       '/imgUpload': {
-        target: `http://localhost:9999`,
+        target: `http://localhost:9800`,
         changeOrigin: true,
         pathRewrite: {
           ['^/imgUpload']: ''

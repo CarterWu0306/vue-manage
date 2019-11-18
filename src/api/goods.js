@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/goods/selGoodsList',
+    url: '/food-goods/goods/selGoodsList',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function addGoods(data) {
   return request({
-    url: '/goods/addGoods',
+    url: '/food-goods/goods/addGoods',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function addGoods(data) {
 
 export function updateGoods(data) {
   return request({
-    url: '/goods/updateGoods',
+    url: '/food-goods/goods/updateGoods',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function updateGoods(data) {
 
 export function changeGoodsStatus(data) {
   return request({
-    url: '/goods/changeGoodsStatus',
+    url: '/food-goods/goods/changeGoodsStatus',
     method: 'post',
     data
   })
@@ -34,7 +34,7 @@ export function changeGoodsStatus(data) {
 
 export function deleteGoods(params) {
   return request({
-    url: '/goods/deleteGoods',
+    url: '/food-goods/goods/deleteGoods',
     method: 'get',
     params
   })
