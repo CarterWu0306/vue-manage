@@ -71,12 +71,21 @@ service.interceptors.response.use(
     }
   },
   error => {
+    const res = error.response.data
     console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    if (res.code === 401){
+      Message({
+        message: res.message,
+        type: 'warning',
+        duration: 5 * 1000
+      })
+    }else{
+      Message({
+        message: res.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )
