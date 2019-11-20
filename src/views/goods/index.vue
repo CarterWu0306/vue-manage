@@ -246,7 +246,7 @@ export default {
       }
     }
     const validatePrice = (rule, value, callback) => {
-      if (!value && value === 0) {
+      if (!value || value === 0) {
         callback(new Error('价格必须大于0'))
       } else {
         callback()

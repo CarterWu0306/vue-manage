@@ -24,6 +24,18 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column
+          prop="userId"
+          label="用户ID"
+          v-if="false"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="userId"
+          label="用户ID"
+          v-if="false"
+        >
+        </el-table-column>
+        <el-table-column
           type="selection"
           width="55">
         </el-table-column>
@@ -122,34 +134,45 @@
       width="600px"
       @close="resetUser"
       :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm"
+      <el-form ref="userForm"
+               :rules="userFormRules"
                :model="userForm"
-               label-position="left"
-               label-width="80px"
+               label-position="right"
+               label-width="85px"
                style="width: 350px; margin-left:50px;"
                @submit.native.prevent>
-        <el-form-item label="用户帐号:">
+        <el-form-item
+          prop="username"
+          label="用户帐号:">
           <el-input v-model="userForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="密   码:">
-          <el-input v-model="userForm.password" type="password"></el-input>
+        <el-form-item
+          prop="password"
+          label="密   码:">
+          <el-input v-model="userForm.password" type="password" placeholder="输入可修改密码"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称:">
+        <el-form-item
+          prop="nickName"
+          label="用户名称:">
           <el-input v-model="userForm.nickName"></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名:">
+        <el-form-item
+          prop="realName"
+          label="真实姓名:">
           <el-input v-model="userForm.realName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码:">
+        <el-form-item
+          prop="userPhone"
+          label="手机号码:">
           <el-input v-model="userForm.userPhone" maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="用户类型:">
-          <el-select v-model="userForm.userType" placeholder="请选择" filterable allow-create>
+          <el-select v-model="userForm.userType" placeholder="请选择">
             <el-option
               v-for="item in roleList"
               :key="item.id"
-              :label="item.id"
-              :value="item.roleName">
+              :label="item.roleName"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -198,6 +221,20 @@ export default {
     }
   },
   data () {
+    const validateData = (rule, value, callback) => {
+        if (!value) {
+            callback(new Error('该项不能为空'))
+        } else {
+            callback()
+        }
+    }
+    const validatePhone = (rule, value, callback) => {
+        if (!(/^1[3456789]\d{9}$/.test(value))) {
+            callback(new Error('请填写正确的号码'))
+        } else {
+            callback()
+        }
+    }
     return {
       tableData: [],
       total: 0,
@@ -209,12 +246,14 @@ export default {
         userType: ''
       },
       userForm: {
+        userId: '',
         username: '',
         password: '',
         nickName: '',
         realName: '',
         userPhone: '',
         userType: '',
+        roleName: '',
         avatar: '',
         userEmail: '',
         createTime: ''
@@ -234,7 +273,13 @@ export default {
         }
       ],
       dialogFormVisible: false,
-      dialogFormTitle: ''
+      dialogFormTitle: '',
+      userFormRules: {
+          username: [{required: true, trigger: 'blur', validator: validateData}],
+          realName: [{required: true, trigger: 'blur', validator: validateData}],
+          nickName: [{required: true, trigger: 'blur', validator: validateData}],
+          userPhone: [{required: true, trigger: 'blur', validator: validatePhone}]
+      },
     }
   },
   methods:{
@@ -253,11 +298,13 @@ export default {
     },
     resetUser () {
       this.userForm = {
+        userId: '',
         username: '',
         password: '',
         nickName: '',
         userPhone: '',
         userType: '',
+        roleName: '',
         avatar: '',
         userEmail: '',
         createTime: new Date()
@@ -294,19 +341,26 @@ export default {
       this.resetUser()
     },
     onCommit() {
-
+       this.$refs.userForm.validate(valid =>{
+           if (valid){
+               console.log(this.userForm)
+           }else {
+               return false
+           }
+       })
     },
     edit(row) {
       this.dialogFormTitle = '编辑用户';
       this.dialogFormVisible = true;
       this.userForm = {
+        userId: row.userId,
         username: row.username,
-        password: row.password,
         nickName: row.nickName,
         realName: row.realName,
         userPhone: row.userPhone,
-        userType: row.role.roleName.id,
-        userPhoto: row.userPhoto,
+        userType: row.roleId,
+        roleName: row.roleName,
+        avatar: row.avatar,
         userEmail: row.userEmail,
         createTime: row.createTime
       }
