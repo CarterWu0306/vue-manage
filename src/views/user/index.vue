@@ -52,7 +52,7 @@
         <el-table-column
           prop="username"
           label="用户帐号"
-          width="220"
+          width="180"
           align="center">
         </el-table-column>
         <el-table-column
@@ -63,13 +63,13 @@
         <el-table-column
           prop="realName"
           label="真实姓名"
-          width="120"
+          width="100"
           align="center">
         </el-table-column>
         <el-table-column
           prop="userPhone"
           label="手机号"
-          width="150"
+          width="130"
           align="center">
         </el-table-column>
         <el-table-column
@@ -81,7 +81,7 @@
         <el-table-column
           prop="userEmail"
           label="邮箱"
-          width="230"
+          width="220"
           align="center">
         </el-table-column>
         <el-table-column
