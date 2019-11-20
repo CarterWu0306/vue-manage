@@ -215,7 +215,7 @@ export default {
         userType: '',
         avatar: '',
         userEmail: '',
-        createTime: new Date()
+        createTime: ''
       },
       roleList:[
         {
@@ -238,9 +238,8 @@ export default {
   methods:{
     getUsers () {
       getUsers(this.listQuery).then(response => {
-        const data = response.data
-        this.total = data.total
-        this.tableData = data.items
+        this.total = response.total
+        this.tableData = response.data
       })
     },
     resetUser () {
@@ -262,13 +261,6 @@ export default {
     },
     handleSelectionChange(val) {
       console.log(val)
-    },
-    handleModifyStatus(row, goodsStatus) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.goodsStatus = goodsStatus
     },
     handleAvatarSuccess(res, file) {
       this.userForm.avatar = res.data.avatar;
