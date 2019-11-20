@@ -355,6 +355,7 @@ export default {
       })
     },
     resetGoods() {
+      this.$refs.goodsForm.resetFields()
       this.goodsForm = {
         goodsName: '',
         goodsLabel: '',

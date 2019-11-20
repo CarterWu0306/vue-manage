@@ -148,8 +148,9 @@
         </el-form-item>
         <el-form-item
           prop="password"
-          label="密   码:">
-          <el-input v-model="userForm.password" type="password" placeholder="输入可修改密码"></el-input>
+          label="密   码:"
+          v-if="dialogFormTitle === '新增用户'">
+          <el-input v-model="userForm.password" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item
           prop="nickName"
@@ -228,6 +229,13 @@ export default {
             callback()
         }
     }
+    const validatePwd = (rule, value, callback) => {
+        if (!value || value.length < 6) {
+            callback(new Error('密码必须大于6位'))
+        } else {
+            callback()
+        }
+    }
     const validatePhone = (rule, value, callback) => {
         if (!(/^1[3456789]\d{9}$/.test(value))) {
             callback(new Error('请填写正确的号码'))
@@ -253,7 +261,6 @@ export default {
         realName: '',
         userPhone: '',
         userType: '',
-        roleName: '',
         avatar: '',
         userEmail: '',
         createTime: ''
@@ -278,8 +285,9 @@ export default {
           username: [{required: true, trigger: 'blur', validator: validateData}],
           realName: [{required: true, trigger: 'blur', validator: validateData}],
           nickName: [{required: true, trigger: 'blur', validator: validateData}],
-          userPhone: [{required: true, trigger: 'blur', validator: validatePhone}]
-      },
+          userPhone: [{required: true, trigger: 'blur', validator: validatePhone}],
+          password: [{required: true, trigger: 'blur', validator: validatePwd}]
+      }
     }
   },
   methods:{
@@ -297,14 +305,14 @@ export default {
       })
     },
     resetUser () {
+      this.$refs.userForm.resetFields()
       this.userForm = {
         userId: '',
         username: '',
         password: '',
         nickName: '',
         userPhone: '',
-        userType: '',
-        roleName: '',
+        userType: 3,
         avatar: '',
         userEmail: '',
         createTime: new Date()
@@ -313,7 +321,10 @@ export default {
     handleCreate () {
       // 调用获取用户类型下拉框接口
       this.dialogFormTitle = '新增用户';
-      this.dialogFormVisible = true
+      this.dialogFormVisible = true;
+      this.userForm = {
+        userType: 3
+      }
     },
     handleSelectionChange(val) {
       console.log(val)
@@ -352,6 +363,7 @@ export default {
     edit(row) {
       this.dialogFormTitle = '编辑用户';
       this.dialogFormVisible = true;
+      this.pwdMsg = '输入可修改密码';
       this.userForm = {
         userId: row.userId,
         username: row.username,
@@ -359,14 +371,13 @@ export default {
         realName: row.realName,
         userPhone: row.userPhone,
         userType: row.roleId,
-        roleName: row.roleName,
         avatar: row.avatar,
         userEmail: row.userEmail,
         createTime: row.createTime
       }
     }
   },
-  mounted () {
+  mounted() {
     this.getUserList()
   }
 }
