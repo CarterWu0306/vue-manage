@@ -87,6 +87,7 @@
         <el-table-column
           prop="createTime"
           label="创建时间"
+          :formatter="dateFormat"
           width="180"
           align="center">
         </el-table-column>
@@ -180,6 +181,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+import moment from 'moment'
 import { getUserList } from '@/api/user'
 export default {
   name: "Product",
@@ -236,6 +238,13 @@ export default {
     }
   },
   methods:{
+    dateFormat (row, column){
+        var date = row[column.property]
+        if(date === undefined){
+            return ''
+        }
+        return moment(date).format("YYYY-MM-DD HH:mm:ss")
+    },
     getUserList () {
       getUserList(this.listQuery).then(response => {
         this.total = response.total

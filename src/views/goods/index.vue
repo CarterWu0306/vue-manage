@@ -298,7 +298,7 @@ export default {
       if(date === undefined){
         return ''
       }
-      return moment(date).format("YYYY-MM-DD")
+      return moment(date).format("YYYY-MM-DD HH:mm")
     },
     getList () {
       getList(this.listQuery).then(response => {
