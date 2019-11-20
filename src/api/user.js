@@ -30,9 +30,10 @@ export function logout() {
   })
 }
 
-export function getUsers() {
+export function getUserList(params) {
   return request({
-    url: '/food-user/user/getUsers',
-    method: 'post'
+    url: '/food-user/user/getUserList',
+    method: 'get',
+    params
   })
 }

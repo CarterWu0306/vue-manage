@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.loginName" placeholder="用户帐号" style="width: 200px;" class="filter-item"></el-input>
+      <el-input v-model="listQuery.realName" placeholder="用户姓名" style="width: 200px;" class="filter-item"></el-input>
       <el-input v-model="listQuery.userPhone" placeholder="手机号" style="width: 200px;" class="filter-item"></el-input>
-      <el-select v-model="listQuery.roleName" placeholder="用户类型" clearable style="width: 120px" class="filter-item">
-        <el-option value="1" label="普通会员"></el-option>
+      <el-select v-model="listQuery.userType" placeholder="用户类型" clearable style="width: 120px" class="filter-item">
+        <el-option value="1" label="店长"></el-option>
         <el-option value="2" label="店员"></el-option>
-        <el-option value="2" label="店长"></el-option>
+        <el-option value="3" label="普通会员"></el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search">
         搜索
@@ -32,8 +32,8 @@
             <el-popover
               placement="right"
               trigger="click">
-              <img :src="row.userPhoto" width="420" height="262" alt=""/>
-              <img slot="reference" :src="row.userPhoto" width="50" height="30" alt=""/>
+              <img :src="row.avatar" width="420" height="262" alt=""/>
+              <img slot="reference" :src="row.avatar" width="50" height="30" alt=""/>
             </el-popover>
           </template>
         </el-table-column>
@@ -62,7 +62,7 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="role.roleName"
+          prop="roleName"
           label="用户类型"
           width="100"
           align="center">
@@ -112,7 +112,7 @@
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
-        @pagination="getUsers"
+        @pagination="getUserList"
         style="padding: 20px 16px 0px 16px;">
       </pagination>
 
@@ -180,7 +180,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getUsers } from '@/api/user'
+import { getUserList } from '@/api/user'
 export default {
   name: "Product",
   components: {
@@ -202,9 +202,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        loginName: '',
+        realName: '',
         userPhone: '',
-        roleName: ''
+        userType: ''
       },
       userForm: {
         username: '',
@@ -236,8 +236,8 @@ export default {
     }
   },
   methods:{
-    getUsers () {
-      getUsers(this.listQuery).then(response => {
+    getUserList () {
+      getUserList(this.listQuery).then(response => {
         this.total = response.total
         this.tableData = response.data
       })
@@ -304,7 +304,7 @@ export default {
     }
   },
   mounted () {
-    this.getUsers()
+    this.getUserList()
   }
 }
 </script>
