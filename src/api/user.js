@@ -37,3 +37,35 @@ export function getUserList(params) {
     params
   })
 }
+
+export function addUser(data) {
+  return request({
+    url: '/food-user/user/addUser',
+    method: 'post',
+    data
+  })
+}
+
+export function updateUser(data) {
+  return request({
+    url: '/food-user/user/updateUser',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteUser(params) {
+  return request({
+    url: '/food-user/user/deleteUser',
+    method: 'get',
+    params
+  })
+}
+
+export function changePwd(data) {
+  return request({
+    url: '/food-user/user/changePwd',
+    method: 'post',
+    data
+  })
+}

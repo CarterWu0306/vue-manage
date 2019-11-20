@@ -58,19 +58,18 @@
         <el-table-column
           prop="nickName"
           label="用户名称"
-          width="200"
           align="center">
         </el-table-column>
         <el-table-column
           prop="realName"
           label="真实姓名"
-          width="110"
+          width="120"
           align="center">
         </el-table-column>
         <el-table-column
           prop="userPhone"
           label="手机号"
-          width="130"
+          width="150"
           align="center">
         </el-table-column>
         <el-table-column
@@ -106,13 +105,16 @@
         <el-table-column
           fixed="right"
           label="操作"
-          width="200"
+          width="300"
           align="center">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini" @click="edit(row)">
               编辑
             </el-button>
-            <el-button size="mini" type="danger">
+            <el-button type="success" size="mini" @click="changePwd(row)">
+              修改密码
+            </el-button>
+            <el-button size="mini" type="danger" @click="deleteRow(row)">
               删除
             </el-button>
           </template>
@@ -184,7 +186,8 @@
           <el-upload
             class="avatar-uploader"
             v-model="userForm.avatar"
-            action="imgUpload/user/uploadUserImage"
+            action="imgUpload/food-user/user/uploadUserImage"
+            :headers="headers"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -196,8 +199,32 @@
       <span slot="footer" class="dialog-footer">
           <el-button type="success" @click="backContinue">返回</el-button>
           <el-button type="info" @click="empty">清空</el-button>
-          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='新增用户'">确认新增</el-button>
-          <el-button type="primary" @click="onCommit" v-show="this.dialogFormTitle==='编辑用户'">确认编辑</el-button>
+          <el-button type="primary" @click="addUser" v-show="this.dialogFormTitle==='新增用户'">确认新增</el-button>
+          <el-button type="primary" @click="editUser" v-show="this.dialogFormTitle==='编辑用户'">确认编辑</el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog
+      :title="this.dialogFormTitle"
+      width="600px"
+      @close="resetUser"
+      :visible.sync="dialogChangePwdVisible">
+      <el-form ref="userForm"
+               :rules="userFormRules"
+               :model="userForm"
+               label-position="right"
+               label-width="85px"
+               style="width: 350px; margin-left:50px;"
+               @submit.native.prevent>
+        <el-form-item
+          prop="password"
+          label="密   码:">
+          <el-input v-model="userForm.password" type="password" placeholder="请输入密码"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button type="success" @click="backContinue">返回</el-button>
+          <el-button type="primary" @click="confirmChange">确认修改</el-button>
         </span>
     </el-dialog>
   </div>
@@ -206,7 +233,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
-import { getUserList } from '@/api/user'
+import { getUserList, addUser, updateUser, deleteUser, changePwd } from '@/api/user'
 export default {
   name: "Product",
   components: {
@@ -280,6 +307,7 @@ export default {
         }
       ],
       dialogFormVisible: false,
+      dialogChangePwdVisible: false,
       dialogFormTitle: '',
       userFormRules: {
           username: [{required: true, trigger: 'blur', validator: validateData}],
@@ -288,6 +316,13 @@ export default {
           userPhone: [{required: true, trigger: 'blur', validator: validatePhone}],
           password: [{required: true, trigger: 'blur', validator: validatePwd}]
       }
+    }
+  },
+  computed:{
+    headers(){
+        return{
+            'X-token': this.$store.getters.token
+        }
     }
   },
   methods:{
@@ -330,7 +365,9 @@ export default {
       console.log(val)
     },
     handleAvatarSuccess(res, file) {
-      this.userForm.avatar = res.data.avatar;
+      this.userForm.avatar = res.data;
+      this.dialogFormVisible = false
+      this.dialogFormVisible = true
     },
     beforeAvatarUpload(file) {
       const isJPGorPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -351,14 +388,77 @@ export default {
     empty() {
       this.resetUser()
     },
-    onCommit() {
-       this.$refs.userForm.validate(valid =>{
-           if (valid){
-               console.log(this.userForm)
-           }else {
-               return false
-           }
-       })
+    addUser(){
+        this.$refs.userForm.validate(valid =>{
+            if (valid){
+                this.loading = true
+                addUser(this.userForm).then(response =>{
+                    this.loading = false
+                    this.dialogFormVisible = false
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    })
+                    this.getUserList()
+                }).catch(() => {
+                    this.loading = false
+                    this.$message({
+                        message: response.message,
+                        type: 'error'
+                    })
+                })
+            }else {
+                return false
+            }
+        })
+    },
+    editUser(){
+        this.$refs.userForm.validate(valid =>{
+            if (valid){
+                this.loading = true
+                updateUser(this.userForm).then(response =>{
+                    this.loading = false
+                    this.dialogFormVisible = false
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    })
+                    this.getUserList()
+                }).catch(() => {
+                    this.loading = false
+                    this.$message({
+                        message: response.message,
+                        type: 'error'
+                    })
+                })
+            }else {
+                return false
+            }
+        })
+    },
+    confirmChange(){
+        this.$refs.userForm.validate(valid =>{
+            if (valid){
+                this.loading = true
+                changePwd(this.userForm).then(response =>{
+                    this.loading = false
+                    this.dialogChangePwdVisible = false
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    })
+                    this.getUserList()
+                }).catch(() => {
+                    this.loading = false
+                    this.$message({
+                        message: response.message,
+                        type: 'error'
+                    })
+                })
+            }else {
+                return false
+            }
+        })
     },
     edit(row) {
       this.dialogFormTitle = '编辑用户';
@@ -375,6 +475,36 @@ export default {
         userEmail: row.userEmail,
         createTime: row.createTime
       }
+    },
+    changePwd(row){
+      this.dialogFormTitle = '修改密码';
+      this.dialogChangePwdVisible = true;
+      this.userForm = {
+          userId: row.userId,
+          userType: row.roleId
+      }
+    },
+    deleteRow(row){
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(response => {
+            deleteUser({ userId: row.userId }).then(response =>{
+                this.$message({
+                    message: response.message,
+                    type: 'success'
+                })
+                this.getUserList()
+            }).catch(() => {
+                this.loading = false
+            })
+        }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+            });
+        });
     }
   },
   mounted() {

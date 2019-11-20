@@ -186,7 +186,8 @@
           <el-upload
             class="avatar-uploader"
             v-model="goodsForm.goodsImg"
-            action="imgUpload/goods/uploadAndReconizeImage"
+            action="imgUpload/food-goods/goods/uploadAndReconizeImage"
+            :headers="headers"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -291,6 +292,13 @@ export default {
       recognizeVisible: false,
       dialogFormTitle: ''
     }
+  },
+  computed:{
+      headers(){
+          return{
+              'X-token': this.$store.getters.token
+          }
+      }
   },
   methods:{
     dateFormat (row, column){
@@ -448,10 +456,6 @@ export default {
           this.getList()
         }).catch(() => {
           this.loading = false
-          this.$message({
-            message: response.message,
-            type: 'error'
-          })
         })
       }).catch(() => {
         this.$message({
