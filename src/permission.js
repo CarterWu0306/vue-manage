@@ -42,6 +42,11 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           router.addRoutes(accessRoutes)
+          router.push({
+            path: '*',
+            redirect: '/404',
+            hidden: true
+          })
 
           next({ ...to, replace: true })
         } catch (error) {
