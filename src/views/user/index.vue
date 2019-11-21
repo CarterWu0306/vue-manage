@@ -8,7 +8,7 @@
         <el-option value="2" label="店员"></el-option>
         <el-option value="3" label="普通会员"></el-option>
       </el-select>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="getUserList">
         搜索
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
