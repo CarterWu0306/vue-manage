@@ -35,20 +35,31 @@ router.beforeEach(async(to, from, next) => {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { roleList } = await store.dispatch('user/getInfo')
           const roles = []
+          var canVisti = false
           roleList.forEach(index => {
+            if (index.roleCode === 'ROLE_MANAGER' || index.roleCode === 'ROLE_ASSISTANT'){
+              canVisti = true
+            }
             roles.push(index.roleCode)
           })
 
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          if (canVisti){
+            const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
-          router.addRoutes(accessRoutes)
-          router.push({
-            path: '*',
-            redirect: '/404',
-            hidden: true
-          })
+            router.addRoutes(accessRoutes)
+            router.push({
+              path: '*',
+              redirect: '/404',
+              hidden: true
+            })
 
-          next({ ...to, replace: true })
+            next({ ...to, replace: true })
+          }else{
+            await store.dispatch('user/resetToken')
+            Message.warning('没有权限登录,请联系管理员')
+            next(`/login?redirect=${to.path}`)
+            NProgress.done()
+          }
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
