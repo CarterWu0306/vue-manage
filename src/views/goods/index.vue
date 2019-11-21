@@ -328,10 +328,6 @@ export default {
             this.getList()
           }).catch(() => {
             this.loading = false
-            this.$message({
-              message: response.message,
-              type: 'error'
-            })
           })
         }else {
           return false
@@ -352,10 +348,6 @@ export default {
             this.getList()
           }).catch(() => {
             this.loading = false
-            this.$message({
-              message: response.message,
-              type: 'error'
-            })
           })
         }else {
           return false
@@ -391,10 +383,6 @@ export default {
           type: 'success'
         })
       }).catch(() => {
-        this.$message({
-          message: response.message,
-          type: 'error'
-        })
       })
     },
     //图像上传识别成功回调

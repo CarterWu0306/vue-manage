@@ -402,10 +402,6 @@ export default {
                     this.getUserList()
                 }).catch(() => {
                     this.loading = false
-                    this.$message({
-                        message: response.message,
-                        type: 'error'
-                    })
                 })
             }else {
                 return false
@@ -426,10 +422,6 @@ export default {
                     this.getUserList()
                 }).catch(() => {
                     this.loading = false
-                    this.$message({
-                        message: response.message,
-                        type: 'error'
-                    })
                 })
             }else {
                 return false
@@ -450,10 +442,6 @@ export default {
                     this.getUserList()
                 }).catch(() => {
                     this.loading = false
-                    this.$message({
-                        message: response.message,
-                        type: 'error'
-                    })
                 })
             }else {
                 return false
