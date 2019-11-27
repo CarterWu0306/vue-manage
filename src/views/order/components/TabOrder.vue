@@ -4,7 +4,6 @@
       <div v-if="tabType==='AllOrders'" style="display:inline">
         <el-row style="float:left;padding: 10px 20px 20px 40px;">
           <el-button size="mini" type="success" :plain="!(listQuery.dateRange==='today'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('today')">今日</el-button>
-          <el-button size="mini" type="success" :plain="!(listQuery.dateRange==='yesterday'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('yesterday')">昨日</el-button>
           <el-button size="mini" type="success" :plain="!(listQuery.dateRange==='week'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('week')">近7天</el-button>
           <el-button size="mini" type="success" :plain="!(listQuery.dateRange==='month'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('month')">近30天</el-button>
           <el-button  size="mini" type="success" :plain="!(listQuery.dateRange==='all'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('all')">全部</el-button>
@@ -166,7 +165,7 @@
           align="center">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini">
-              编辑
+              编辑<!--需修改-->
             </el-button>
             <el-button size="mini" type="danger">
               删除

@@ -1,7 +1,7 @@
 <template>
   <div class="order-tabs">
     <el-tabs v-model="tabType" style="margin-top:15px;" class="el-tabs">
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
+      <el-tab-pane v-for="item in tabMapOptions" :key="item.id" :label="item.label" :name="item.key">
         <tab-order :tabType="item.key"/>
       </el-tab-pane>
     </el-tabs>
@@ -16,8 +16,16 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '待处理订单', key: 'PendingOrders' },
-        { label: '全部订单', key: 'AllOrders' }
+          {
+              id: 1,
+              label: '待处理订单',
+              key: 'PendingOrders'
+          },
+          {
+              id: 2,
+              label: '全部订单',
+              key: 'AllOrders'
+          }
       ],
       tabType: 'PendingOrders'
     }
