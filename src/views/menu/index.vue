@@ -10,126 +10,29 @@
 <script>
 import foods from './components/Foods'
 import shopCart from './components/ShopCart'
+import { getAllGoodsList } from '@/api/goods'
 export default {
-  name: "index",
-  components:{ foods, shopCart},
-  data() {
-    return {
-      foods:[
-        {
-          id: 0,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 1,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 2,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 3,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 4,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 5,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 6,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 7,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 8,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 9,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 10,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 11,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 12,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 13,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 14,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 15,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 16,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 17,
-          name: "可乐",
-          num: 0,
-          price: 18
-        },{
-          id: 18,
-          name: "汉堡",
-          num: 0,
-          price: 18
-        },
-        {
-          id: 19,
-          name: "可乐",
-          num: 0,
-          price: 18
+    name: "index",
+    components:{ foods, shopCart},
+    data() {
+      return {
+        foods: []
+      }
+    },
+    methods:{
+        getAllGoodsList(){
+            getAllGoodsList().then(response => {
+                const data = response.data;
+                data.forEach((item) => {
+                    item.num = 0
+                });
+                this.foods = data
+            })
         }
-      ]
+    },
+    mounted() {
+        this.getAllGoodsList()
     }
-  }
 }
 </script>
 

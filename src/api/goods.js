@@ -8,6 +8,13 @@ export function getList(params) {
   })
 }
 
+export function getAllGoodsList() {
+  return request({
+    url: '/food-goods/goods/getAllGoodsList',
+    method: 'get',
+  })
+}
+
 export function addGoods(data) {
   return request({
     url: '/food-goods/goods/addGoods',
