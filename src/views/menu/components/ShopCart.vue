@@ -33,13 +33,14 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="success" @click="backContinue">继续点餐</el-button>
         <el-button type="info" @click="empty">清空</el-button>
-        <el-button type="primary">下单</el-button>
+        <el-button type="primary" :loading="loading" @click="placeOrder">下单</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { placeOrderByAdmin } from '@/api/feign'
 export default {
   name: "ShopCart",
   props: {
@@ -56,6 +57,7 @@ export default {
             deductionScore: 0,
             goodsList: []
         },
+        loading: false,
         dialogFormVisible: false,
         dialogStatus: ''
     }
@@ -82,43 +84,56 @@ export default {
     }
   },
   methods: {
-    handleCreate () {
-      this.selected();
-      this.dialogStatus = 'create';
-      this.dialogFormVisible = true;
-      this.orderForm = {
-          userId: this.$store.getters.userId,
-          totalMoney: this.totalCount().toFixed(2),
-          realTotalMoney: this.totalCount().toFixed(2),
-          deductionScore: 0,
-          goodsList: this.selectedFoods
-      }
-    },
-    selected() {
-      this.selectedFoods = [];
-      this.foods.forEach((food) =>{
-        if (food.num){
-          this.selectedFoods.push(food)
+      handleCreate () {
+        this.selected();
+        this.dialogStatus = 'create';
+        this.dialogFormVisible = true;
+        this.orderForm = {
+            userId: this.$store.getters.userId,
+            totalMoney: this.totalCount().toFixed(2),
+            realTotalMoney: this.totalCount().toFixed(2),
+            deductionScore: 0,
+            goodsList: this.selectedFoods
         }
-      })
-    },
-    addFood(index) {
-      this.foods[index].num++
-    },
-    decreaseFood(index) {
-      if (this.foods[index].num>0){
-        this.foods[index].num--
+      },
+      selected() {
+        this.selectedFoods = [];
+        this.foods.forEach((food) =>{
+          if (food.num){
+            this.selectedFoods.push(food)
+          }
+        })
+      },
+      addFood(index) {
+        this.foods[index].num++
+      },
+      decreaseFood(index) {
+        if (this.foods[index].num>0){
+          this.foods[index].num--
+        }
+      },
+      backContinue() {
+        this.dialogFormVisible = false
+      },
+      empty() {
+        this.selectedFoods = [];
+        this.foods.forEach((food) => {
+          food.num = 0
+        });
+      },
+      placeOrder(){
+          this.loading = true;
+          placeOrderByAdmin(this.orderForm).then(response => {
+              this.loading = false;
+              this.dialogFormVisible = false;
+              this.$message({
+                  message: response.message,
+                  type: 'success'
+              })
+          }).catch(() => {
+              this.loading = false
+          })
       }
-    },
-    backContinue() {
-      this.dialogFormVisible = false
-    },
-    empty() {
-      this.selectedFoods = [];
-      this.foods.forEach((food) => {
-        food.num = 0
-      });
-    }
   }
 }
 </script>
