@@ -47,19 +47,17 @@ export default {
   },
   data() {
     return {
-      selectedFoods: [],
-      fold: true,
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
-      },
-      dialogFormVisible: false,
-      dialogStatus: ''
+        selectedFoods: [],
+        fold: true,
+        orderForm: {
+            userId: "",
+            totalMoney: 0.00,
+            realTotalMoney: 0.00,
+            deductionScore: 0,
+            goodsList: []
+        },
+        dialogFormVisible: false,
+        dialogStatus: ''
     }
   },
   computed: {
@@ -88,6 +86,13 @@ export default {
       this.selected();
       this.dialogStatus = 'create';
       this.dialogFormVisible = true;
+      this.orderForm = {
+          userId: this.$store.getters.userId,
+          totalMoney: this.totalCount().toFixed(2),
+          realTotalMoney: this.totalCount().toFixed(2),
+          deductionScore: 0,
+          goodsList: this.selectedFoods
+      }
     },
     selected() {
       this.selectedFoods = [];
