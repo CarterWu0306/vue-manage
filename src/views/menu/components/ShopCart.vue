@@ -19,10 +19,10 @@
       :visible.sync="dialogFormVisible">
       <div class="dialog">
         <span class="shop-cart-empty" v-show="!selectedFoods.length>0">当前购物车为空</span>
-        <div class="label" v-for="(food,index) in foods" :key="food.id">
-          <span class="food-name" v-show="food.num">{{ food.name }}</span>
+        <div class="label" v-for="(food,index) in foods" :key="food.goodsId">
+          <span class="food-name" v-show="food.num">{{ food.goodsName }}</span>
           <div style="float: right" v-show="food.num">
-            <span class="food-price">￥{{ food.price * food.num }}</span>
+            <span class="food-price">￥{{ food.goodsPrice * food.num }}</span>
             <svg-icon iconClass="decrease" class="button" @click="decreaseFood(index)"></svg-icon>
             <span class="button-count">{{ food.num }}</span>
             <svg-icon iconClass="add" class="button" @click="addFood(index)"></svg-icon>
@@ -74,7 +74,7 @@ export default {
       let price = 0;
       this.foods.forEach((food) => {
         if (food.num) {
-          price += food.price * food.num;
+          price += food.goodsPrice * food.num;
         }
       });
       if (price===0){
