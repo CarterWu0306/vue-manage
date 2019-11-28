@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="height: 750px;">
-      <div v-if="tabType==='AllOrders'" style="display:inline">
+      <div style="display:inline">
         <el-row style="float:left;padding: 10px 20px 20px 40px;">
           <el-button
             size="mini"
@@ -37,8 +37,8 @@
             v-model="listQuery.orderSn"
             placeholder="订单编号"
             style="width: 350px;float:left;padding-left: 20px;"
-            class="filter-item"
-          />
+            class="filter-item">
+          </el-input>
           <el-button class="filter-item" style="margin-left: 10px;float:left;" type="primary" icon="el-icon-search">
             查询
           </el-button>
@@ -58,20 +58,20 @@
           prop="orderSn"
           label="订单编号"
           width="320"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
-          prop="userId"
-          label="用户 ID"
-          width="150"
-          align="center"
-        />
+          prop="nickName"
+          label="用户昵称"
+          width="200"
+          align="center">
+        </el-table-column>
         <el-table-column
-          prop="userName"
+          prop="realName"
           label="用户姓名"
           width="100"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="orderDetails"
           label="订单详情"
@@ -88,19 +88,19 @@
           prop="totalMoney"
           label="订单总金额"
           width="120"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="realTotalMoney"
           label="实付金额"
           width="120"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="orderRemarks"
           label="备注"
-          width="160"
-        />
+          width="160">
+        </el-table-column>
         <el-table-column
           prop="orderStatus"
           label="订单状态"
@@ -171,28 +171,28 @@
           prop="deductionScore"
           label="抵扣积分"
           width="120"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="orderScore"
           label="所得积分"
           width="120"
-          align="center"
-        />
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="orderCreateTime"
           label="订单创建时间"
           width="250"
           align="center"
-          :formatter="dateFormat"
-        />
+          :formatter="dateFormat">
+        </el-table-column>
         <el-table-column
           prop="orderPayTime"
           label="订单支付时间"
           width="250"
           align="center"
-          :formatter="dateFormat"
-        />
+          :formatter="dateFormat">
+        </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
@@ -273,8 +273,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
                 import('@/vendor/Export2Excel').then(excel => {
-                  const tHeader = ['订单编号', '用户ID', '订单金额', '实付金额', '订单详情', '备注', '订单状态', '支付状态', '是否点评', '是否退款', '所得积分', '订单创建时间', '订单支付时间']
-                  const filterVal = ['orderSn', 'userId', 'totalMoney', 'realTotalMoney', 'orderDetails', 'orderRemarks', 'orderStatus', 'payStatus', 'isAppraise', 'isRefund', 'orderScore', 'orderCreateTime', 'orderPayTime']
+                  const tHeader = ['订单编号', '用户昵称','用户姓名', '订单总金额', '实付金额', '订单详情', '备注', '订单状态', '支付状态', '是否点评', '是否退款', '抵扣积分', '所得积分', '订单创建时间', '订单支付时间']
+                  const filterVal = ['orderSn', 'nickName', 'realName', 'totalMoney', 'realTotalMoney', 'orderDetails', 'orderRemarks', 'orderStatus', 'payStatus', 'isAppraise', 'isRefund', 'deductionScore', 'orderScore', 'orderCreateTime', 'orderPayTime']
                   const data = this.formatJson(filterVal, this.tableData)
                   excel.export_json_to_excel({
                     header: tHeader,
