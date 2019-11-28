@@ -7,3 +7,10 @@ export function getOrderList(params) {
     params
   })
 }
+
+export function getAllOrders() {
+  return request({
+    url: '/food-order/order/getAllOrders',
+    method: 'get'
+  })
+}
