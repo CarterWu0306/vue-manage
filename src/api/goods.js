@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function getAllGoodsList() {
   return request({
-    url: '/food-goods/goods/getAllGoodsList',
+    url: '/food-goods/goods/selAllGoodsList',
     method: 'get'
   })
 }
