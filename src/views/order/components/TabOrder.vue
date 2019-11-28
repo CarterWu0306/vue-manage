@@ -9,15 +9,6 @@
           <el-button  size="mini" type="success" :plain="!(listQuery.dateRange==='all'&&listQuery.dateRangeValue==='')" @click="dateRangeChange('all')">全部</el-button>
         </el-row>
         <div style="padding-top: 3px;" class="order-date-picker">
-          <el-date-picker
-            v-model="listQuery.dateRangeValue"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            @change="datePickerChange"
-            style="float:left;">
-          </el-date-picker>
           <el-input v-model="listQuery.orderSn" placeholder="订单编号" style="width: 350px;float:left;padding-left: 20px;" class="filter-item"></el-input>
           <el-button class="filter-item" style="margin-left: 10px;float:left;" type="primary" icon="el-icon-search">
             查询
@@ -141,6 +132,12 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="deductionScore"
+          label="抵扣积分"
+          width="120"
+          align="center">
+        </el-table-column>
+        <el-table-column
           prop="orderScore"
           label="所得积分"
           width="120"
@@ -187,7 +184,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList } from '@/api/table'
+import { getOrderList } from '@/api/order'
 import { parseTime } from '@/utils'
 export default {
   name: "TabOrder",
@@ -204,10 +201,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        orderSn: undefined,
+        orderSn: '',
         dateRange: 'today',
-        tabType: this.tabType,
-        dateRangeValue: ''
+        tabType: this.tabType
       },
       downloadLoading: false
     }
@@ -216,9 +212,6 @@ export default {
     dateRangeChange(dateType) {
       this.listQuery.dateRange = dateType
       this.listQuery.dateRangeValue = ''
-    },
-    datePickerChange() {
-
     },
     getOrderList() {
       getOrderList(this.listQuery).then(response => {
