@@ -6,7 +6,7 @@
           <el-button
             size="mini"
             type="success"
-            :plain="!(listQuery.dateRange==='today'&&listQuery.dateRangeValue==='')"
+            :plain="!(listQuery.dateRange==='today')"
             @click="dateRangeChange('today')"
           >
             今日
@@ -14,7 +14,7 @@
           <el-button
             size="mini"
             type="success"
-            :plain="!(listQuery.dateRange==='week'&&listQuery.dateRangeValue==='')"
+            :plain="!(listQuery.dateRange==='week')"
             @click="dateRangeChange('week')"
           >
             近7天
@@ -22,7 +22,7 @@
           <el-button
             size="mini"
             type="success"
-            :plain="!(listQuery.dateRange==='month'&&listQuery.dateRangeValue==='')"
+            :plain="!(listQuery.dateRange==='month')"
             @click="dateRangeChange('month')"
           >
             近30天
@@ -30,7 +30,7 @@
           <el-button
             size="mini"
             type="success"
-            :plain="!(listQuery.dateRange==='all'&&listQuery.dateRangeValue==='')"
+            :plain="!(listQuery.dateRange==='all')"
             @click="dateRangeChange('all')"
           >
             全部
@@ -247,7 +247,7 @@ export default {
             page: 1,
             limit: 20,
             orderSn: '',
-            dateRange: 'week',
+            dateRange: 'today',
             tabType: this.tabType
           },
           downloadLoading: false
