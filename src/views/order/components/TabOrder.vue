@@ -8,28 +8,32 @@
             type="success"
             :plain="!(listQuery.dateRange==='today'&&listQuery.dateRangeValue==='')"
             @click="dateRangeChange('today')"
-          >今日
+          >
+            今日
           </el-button>
           <el-button
             size="mini"
             type="success"
             :plain="!(listQuery.dateRange==='week'&&listQuery.dateRangeValue==='')"
             @click="dateRangeChange('week')"
-          >近7天
+          >
+            近7天
           </el-button>
           <el-button
             size="mini"
             type="success"
             :plain="!(listQuery.dateRange==='month'&&listQuery.dateRangeValue==='')"
             @click="dateRangeChange('month')"
-          >近30天
+          >
+            近30天
           </el-button>
           <el-button
             size="mini"
             type="success"
             :plain="!(listQuery.dateRange==='all'&&listQuery.dateRangeValue==='')"
             @click="dateRangeChange('all')"
-          >全部
+          >
+            全部
           </el-button>
         </el-row>
         <div style="padding-top: 3px;" class="order-date-picker">
@@ -223,7 +227,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList } from '@/api/order'
+import { getOrderList, getAllOrders} from '@/api/order'
 import { parseTime } from '@/utils'
 import moment from 'moment'
 
@@ -236,106 +240,111 @@ export default {
     tabType: String
   },
   data() {
-    return {
-      tableData: [],
-      total: 0,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        orderSn: '',
-        dateRange: 'week',
-        tabType: this.tabType
-      },
-      downloadLoading: false
-    }
+      return {
+          tableData: [],
+          total: 0,
+          listQuery: {
+            page: 1,
+            limit: 20,
+            orderSn: '',
+            dateRange: 'week',
+            tabType: this.tabType
+          },
+          downloadLoading: false
+      }
   },
   mounted() {
-    this.getOrderList()
+      this.getOrderList()
   },
   methods: {
-    dateFormat(row, column) {
-      var date = row[column.property]
-      if (date === undefined) {
-        return ''
-      }
-      return moment(date).format('YYYY-MM-DD HH:mm:ss')
-    },
-    dateRangeChange(dateType) {
-      this.listQuery.dateRange = dateType
-      this.listQuery.dateRangeValue = ''
-    },
-    getOrderList() {
-      getOrderList(this.listQuery).then(response => {
-        this.total = response.total
-        this.tableData = response.data
-      })
-    },
-    handleDownload() {
-      this.downloadLoading = true
-                import('@/vendor/Export2Excel').then(excel => {
+      dateFormat(row, column) {
+          var date = row[column.property]
+          if (date === undefined) {
+              return ''
+          }
+          return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      },
+      dateRangeChange(dateType) {
+          this.listQuery.dateRange = dateType;
+          this.getOrderList();
+      },
+      getOrderList() {
+          getOrderList(this.listQuery).then(response => {
+              this.total = response.total
+              this.tableData = response.data
+          })
+      },
+      handleDownload() {
+          this.downloadLoading = true
+          getAllOrders().then(response => {
+              const allOrders = response.data
+              import('@/vendor/Export2Excel').then(excel => {
                   const tHeader = ['订单编号', '用户昵称','用户姓名', '订单总金额', '实付金额', '订单详情', '备注', '订单状态', '支付状态', '是否点评', '是否退款', '抵扣积分', '所得积分', '订单创建时间', '订单支付时间']
                   const filterVal = ['orderSn', 'nickName', 'realName', 'totalMoney', 'realTotalMoney', 'orderDetails', 'orderRemarks', 'orderStatus', 'payStatus', 'isAppraise', 'isRefund', 'deductionScore', 'orderScore', 'orderCreateTime', 'orderPayTime']
-                  const data = this.formatJson(filterVal, this.tableData)
+                  const data = this.formatJson(filterVal, allOrders)
                   excel.export_json_to_excel({
-                    header: tHeader,
-                    data,
-                    filename: '订单Excel'
-                  })
+                      header: tHeader,
+                      data,
+                      filename: '订单Excel'
+                  });
                   this.downloadLoading = false
-                })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'orderCreateTime' || j === 'orderPayTime') {
-          return parseTime(v[j])
+              })
+          }).catch(() => {
+              this.downloadLoading = false
+          })
+      },
+      formatJson(filterVal, jsonData) {
+          return jsonData.map(v => filterVal.map(j => {
+              if (j === 'orderCreateTime' || j === 'orderPayTime') {
+                  return parseTime(v[j])
+              }
+              if (j === 'orderDetails') {
+                var orderDetails = ''
+                for (var i = 0; i < v[j].length; i++) {
+                    orderDetails += v[j][i].goodsName + ' X' + v[j][i].goodsNum + ' '
+                }
+                return orderDetails
+              }
+              if (j === 'orderStatus') {
+                if (v[j] === '-2') {
+                    return '订单取消'
+                }
+                if (v[j] === '-1') {
+                    return '待支付'
+                }
+                if (v[j] === '0') {
+                    return '制作中'
+                }
+                if (v[j] === '1') {
+                    return '订单完成'
+                }
+              }
+              if (j === 'payStatus') {
+                if (v[j] === '0') {
+                    return '未支付'
+                } else {
+                    return '已支付'
+                }
+              }
+              if (j === 'isAppraise') {
+                if (v[j] === '0') {
+                    return '未点评'
+                } else {
+                    return '已点评'
+                }
+              }
+              if (j === 'isRefund') {
+                  if (v[j] === '0') {
+                      return '未退款'
+                  } else {
+                      return '已退款'
+                  }
+              } else {
+                  return v[j]
+              }
+          }))
         }
-        if (j === 'orderDetails') {
-          var orderDetails = ''
-          for (var i = 0; i < v[j].length; i++) {
-            orderDetails += v[j][i].goodsName + ' X' + v[j][i].goodsNum + ' '
-          }
-          return orderDetails
-        }
-        if (j === 'orderStatus') {
-          if (v[j] === '-2') {
-            return '订单取消'
-          }
-          if (v[j] === '-1') {
-            return '待支付'
-          }
-          if (v[j] === '0') {
-            return '制作中'
-          }
-          if (v[j] === '1') {
-            return '订单完成'
-          }
-        }
-        if (j === 'payStatus') {
-          if (v[j] === '0') {
-            return '未支付'
-          } else {
-            return '已支付'
-          }
-        }
-        if (j === 'isAppraise') {
-          if (v[j] === '0') {
-            return '未点评'
-          } else {
-            return '已点评'
-          }
-        }
-        if (j === 'isRefund') {
-          if (v[j] === '0') {
-            return '未退款'
-          } else {
-            return '已退款'
-          }
-        } else {
-          return v[j]
-        }
-      }))
     }
-  }
 }
 </script>
 
