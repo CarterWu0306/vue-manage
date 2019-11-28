@@ -37,13 +37,13 @@ router.beforeEach(async(to, from, next) => {
           const roles = []
           var canVisti = false
           roleList.forEach(index => {
-            if (index.roleCode === 'ROLE_MANAGER' || index.roleCode === 'ROLE_ASSISTANT'){
+            if (index.roleCode === 'ROLE_MANAGER' || index.roleCode === 'ROLE_ASSISTANT') {
               canVisti = true
             }
             roles.push(index.roleCode)
           })
 
-          if (canVisti){
+          if (canVisti) {
             const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
             router.addRoutes(accessRoutes)
@@ -54,7 +54,7 @@ router.beforeEach(async(to, from, next) => {
             })
 
             next({ ...to, replace: true })
-          }else{
+          } else {
             await store.dispatch('user/resetToken')
             Message.warning('没有权限登录,请联系管理员')
             next(`/login?redirect=${to.path}`)

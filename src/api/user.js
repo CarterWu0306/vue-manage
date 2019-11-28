@@ -15,7 +15,7 @@ export function getInfo() {
   })
 }
 
-/*export function getInfo(token) {
+/* export function getInfo(token) {
   return request({
     url: '/user/info',
     method: 'get',

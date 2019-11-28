@@ -23,20 +23,20 @@ const users = {
 }
 
 const usersData = {
-  "items": [
+  'items': [
     {
-      "userPhoto": "https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg",
-      "loginName": "carter0306",
-      "userPwd": "123456",
-      "userName": "假装躺在云上好轻松",
-      "realName": "伍卡特",
-      "userPhone": "15669252627",
-      "userType": "店长",
-      "userEmail": "carter0306@163.com",
-      "userScore": 100,
-      "createTime": "2019-9-26 13:56:26"
+      'userPhoto': 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+      'loginName': 'carter0306',
+      'userPwd': '123456',
+      'userName': '假装躺在云上好轻松',
+      'realName': '伍卡特',
+      'userPhone': '15669252627',
+      'userType': '店长',
+      'userEmail': 'carter0306@163.com',
+      'userScore': 100,
+      'createTime': '2019-9-26 13:56:26'
     }
-    ]
+  ]
 }
 
 export default [

@@ -11,7 +11,7 @@ export function getList(params) {
 export function getAllGoodsList() {
   return request({
     url: '/food-goods/goods/getAllGoodsList',
-    method: 'get',
+    method: 'get'
   })
 }
 

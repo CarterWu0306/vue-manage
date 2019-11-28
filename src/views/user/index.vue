@@ -8,10 +8,12 @@
         <el-option value="2" label="店员"></el-option>
         <el-option value="3" label="普通会员"></el-option>
       </el-select>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="getUserList">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search"
+                 @click="getUserList">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                 @click="handleCreate">
         新增用户
       </el-button>
     </div>
@@ -122,14 +124,14 @@
       </el-table>
     </div>
 
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getUserList"
-        style="padding: 20px 16px 0px 16px;">
-      </pagination>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getUserList"
+      style="padding: 20px 16px 0px 16px;">
+    </pagination>
 
     <el-dialog
       :title="this.dialogFormTitle"
@@ -231,274 +233,275 @@
 </template>
 
 <script>
-import Pagination from '@/components/Pagination'
-import moment from 'moment'
-import { getUserList, addUser, updateUser, deleteUser, changePwd } from '@/api/user'
-export default {
-  name: "Product",
-  components: {
-    Pagination
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        1: 'success',
-        0: 'info'
-      }
-      return statusMap[status]
-    }
-  },
-  data () {
-    const validateData = (rule, value, callback) => {
-        if (!value) {
-            callback(new Error('该项不能为空'))
-        } else {
-            callback()
-        }
-    }
-    const validatePwd = (rule, value, callback) => {
-        if (!value || value.length < 6) {
-            callback(new Error('密码必须大于6位'))
-        } else {
-            callback()
-        }
-    }
-    const validatePhone = (rule, value, callback) => {
-        if (!(/^1[3456789]\d{9}$/.test(value))) {
-            callback(new Error('请填写正确的号码'))
-        } else {
-            callback()
-        }
-    }
-    return {
-      tableData: [],
-      total: 0,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        realName: '',
-        userPhone: '',
-        userType: ''
-      },
-      userForm: {
-        userId: '',
-        username: '',
-        password: '',
-        nickName: '',
-        realName: '',
-        userPhone: '',
-        userType: '',
-        avatar: '',
-        userEmail: '',
-        createTime: ''
-      },
-      roleList:[
-        {
-          id: 1,
-          roleName: '店长'
-        },
-        {
-          id: 2,
-          roleName: '店员'
-        },
-        {
-          id: 3,
-          roleName: '普通会员'
-        }
-      ],
-      dialogFormVisible: false,
-      dialogChangePwdVisible: false,
-      dialogFormTitle: '',
-      userFormRules: {
-          username: [{required: true, trigger: 'blur', validator: validateData}],
-          realName: [{required: true, trigger: 'blur', validator: validateData}],
-          nickName: [{required: true, trigger: 'blur', validator: validateData}],
-          userPhone: [{required: true, trigger: 'blur', validator: validatePhone}],
-          password: [{required: true, trigger: 'blur', validator: validatePwd}]
-      }
-    }
-  },
-  computed:{
-    headers(){
-        return{
-            'X-token': this.$store.getters.token
-        }
-    }
-  },
-  methods:{
-    dateFormat (row, column){
-        var date = row[column.property]
-        if(date === undefined){
-            return ''
-        }
-        return moment(date).format("YYYY-MM-DD HH:mm:ss")
-    },
-    getUserList () {
-      getUserList(this.listQuery).then(response => {
-        this.total = response.total
-        this.tableData = response.data
-      })
-    },
-    resetUser () {
-      this.$refs.userForm.resetFields()
-      this.userForm = {
-        userId: '',
-        username: '',
-        password: '',
-        nickName: '',
-        userPhone: '',
-        userType: 3,
-        avatar: '',
-        userEmail: '',
-        createTime: new Date()
-      }
-    },
-    handleCreate () {
-      // 调用获取用户类型下拉框接口
-      this.dialogFormTitle = '新增用户';
-      this.dialogFormVisible = true;
-      this.userForm = {
-        userType: 3
-      }
-    },
-    handleSelectionChange(val) {
-      console.log(val)
-    },
-    handleAvatarSuccess(res, file) {
-      this.userForm.avatar = res.data;
-      this.dialogFormVisible = false
-      this.dialogFormVisible = true
-    },
-    beforeAvatarUpload(file) {
-      const isJPGorPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    import Pagination from '@/components/Pagination'
+    import moment from 'moment'
+    import {getUserList, addUser, updateUser, deleteUser, changePwd} from '@/api/user'
 
-      if (!isJPGorPng) {
-        this.$message.error('上传图片只能是 JPG、PNG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!');
-      }
-      return isJPGorPng && isLt2M;
-    },
-    backContinue() {
-      this.resetUser();
-      this.dialogFormVisible = false;
-    },
-    empty() {
-      this.resetUser()
-    },
-    addUser(){
-        this.$refs.userForm.validate(valid =>{
-            if (valid){
-                this.loading = true
-                addUser(this.userForm).then(response =>{
-                    this.loading = false
-                    this.dialogFormVisible = false
-                    this.$message({
-                        message: response.message,
-                        type: 'success'
-                    })
-                    this.getUserList()
-                }).catch(() => {
-                    this.loading = false
-                })
-            }else {
-                return false
+    export default {
+        name: "Product",
+        components: {
+            Pagination
+        },
+        filters: {
+            statusFilter(status) {
+                const statusMap = {
+                    1: 'success',
+                    0: 'info'
+                }
+                return statusMap[status]
             }
-        })
-    },
-    editUser(){
-        this.$refs.userForm.validate(valid =>{
-            if (valid){
-                this.loading = true
-                updateUser(this.userForm).then(response =>{
-                    this.loading = false
-                    this.dialogFormVisible = false
-                    this.$message({
-                        message: response.message,
-                        type: 'success'
-                    })
-                    this.getUserList()
-                }).catch(() => {
-                    this.loading = false
-                })
-            }else {
-                return false
+        },
+        data() {
+            const validateData = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('该项不能为空'))
+                } else {
+                    callback()
+                }
             }
-        })
-    },
-    confirmChange(){
-        this.$refs.userForm.validate(valid =>{
-            if (valid){
-                this.loading = true
-                changePwd(this.userForm).then(response =>{
-                    this.loading = false
-                    this.dialogChangePwdVisible = false
-                    this.$message({
-                        message: response.message,
-                        type: 'success'
-                    })
-                    this.getUserList()
-                }).catch(() => {
-                    this.loading = false
-                })
-            }else {
-                return false
+            const validatePwd = (rule, value, callback) => {
+                if (!value || value.length < 6) {
+                    callback(new Error('密码必须大于6位'))
+                } else {
+                    callback()
+                }
             }
-        })
-    },
-    edit(row) {
-      this.dialogFormTitle = '编辑用户';
-      this.dialogFormVisible = true;
-      this.pwdMsg = '输入可修改密码';
-      this.userForm = {
-        userId: row.userId,
-        username: row.username,
-        nickName: row.nickName,
-        realName: row.realName,
-        userPhone: row.userPhone,
-        userType: row.roleId,
-        avatar: row.avatar,
-        userEmail: row.userEmail,
-        createTime: row.createTime
-      }
-    },
-    changePwd(row){
-      this.dialogFormTitle = '修改密码';
-      this.dialogChangePwdVisible = true;
-      this.userForm = {
-          userId: row.userId,
-          userType: row.roleId
-      }
-    },
-    deleteRow(row){
-        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(response => {
-            deleteUser({ userId: row.userId }).then(response =>{
-                this.$message({
-                    message: response.message,
-                    type: 'success'
+            const validatePhone = (rule, value, callback) => {
+                if (!(/^1[3456789]\d{9}$/.test(value))) {
+                    callback(new Error('请填写正确的号码'))
+                } else {
+                    callback()
+                }
+            }
+            return {
+                tableData: [],
+                total: 0,
+                listQuery: {
+                    page: 1,
+                    limit: 20,
+                    realName: '',
+                    userPhone: '',
+                    userType: ''
+                },
+                userForm: {
+                    userId: '',
+                    username: '',
+                    password: '',
+                    nickName: '',
+                    realName: '',
+                    userPhone: '',
+                    userType: '',
+                    avatar: '',
+                    userEmail: '',
+                    createTime: ''
+                },
+                roleList: [
+                    {
+                        id: 1,
+                        roleName: '店长'
+                    },
+                    {
+                        id: 2,
+                        roleName: '店员'
+                    },
+                    {
+                        id: 3,
+                        roleName: '普通会员'
+                    }
+                ],
+                dialogFormVisible: false,
+                dialogChangePwdVisible: false,
+                dialogFormTitle: '',
+                userFormRules: {
+                    username: [{required: true, trigger: 'blur', validator: validateData}],
+                    realName: [{required: true, trigger: 'blur', validator: validateData}],
+                    nickName: [{required: true, trigger: 'blur', validator: validateData}],
+                    userPhone: [{required: true, trigger: 'blur', validator: validatePhone}],
+                    password: [{required: true, trigger: 'blur', validator: validatePwd}]
+                }
+            }
+        },
+        computed: {
+            headers() {
+                return {
+                    'X-token': this.$store.getters.token
+                }
+            }
+        },
+        methods: {
+            dateFormat(row, column) {
+                var date = row[column.property]
+                if (date === undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD HH:mm:ss")
+            },
+            getUserList() {
+                getUserList(this.listQuery).then(response => {
+                    this.total = response.total
+                    this.tableData = response.data
                 })
-                this.getUserList()
-            }).catch(() => {
-                this.loading = false
-            })
-        }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '已取消删除'
-            });
-        });
+            },
+            resetUser() {
+                this.$refs.userForm.resetFields()
+                this.userForm = {
+                    userId: '',
+                    username: '',
+                    password: '',
+                    nickName: '',
+                    userPhone: '',
+                    userType: 3,
+                    avatar: '',
+                    userEmail: '',
+                    createTime: new Date()
+                }
+            },
+            handleCreate() {
+                // 调用获取用户类型下拉框接口
+                this.dialogFormTitle = '新增用户';
+                this.dialogFormVisible = true;
+                this.userForm = {
+                    userType: 3
+                }
+            },
+            handleSelectionChange(val) {
+                console.log(val)
+            },
+            handleAvatarSuccess(res, file) {
+                this.userForm.avatar = res.data;
+                this.dialogFormVisible = false
+                this.dialogFormVisible = true
+            },
+            beforeAvatarUpload(file) {
+                const isJPGorPng = file.type === 'image/jpeg' || file.type === 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPGorPng) {
+                    this.$message.error('上传图片只能是 JPG、PNG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传图片大小不能超过 2MB!');
+                }
+                return isJPGorPng && isLt2M;
+            },
+            backContinue() {
+                this.resetUser();
+                this.dialogFormVisible = false;
+            },
+            empty() {
+                this.resetUser()
+            },
+            addUser() {
+                this.$refs.userForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        addUser(this.userForm).then(response => {
+                            this.loading = false
+                            this.dialogFormVisible = false
+                            this.$message({
+                                message: response.message,
+                                type: 'success'
+                            })
+                            this.getUserList()
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            editUser() {
+                this.$refs.userForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        updateUser(this.userForm).then(response => {
+                            this.loading = false
+                            this.dialogFormVisible = false
+                            this.$message({
+                                message: response.message,
+                                type: 'success'
+                            })
+                            this.getUserList()
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            confirmChange() {
+                this.$refs.userForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        changePwd(this.userForm).then(response => {
+                            this.loading = false
+                            this.dialogChangePwdVisible = false
+                            this.$message({
+                                message: response.message,
+                                type: 'success'
+                            })
+                            this.getUserList()
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            edit(row) {
+                this.dialogFormTitle = '编辑用户';
+                this.dialogFormVisible = true;
+                this.pwdMsg = '输入可修改密码';
+                this.userForm = {
+                    userId: row.userId,
+                    username: row.username,
+                    nickName: row.nickName,
+                    realName: row.realName,
+                    userPhone: row.userPhone,
+                    userType: row.roleId,
+                    avatar: row.avatar,
+                    userEmail: row.userEmail,
+                    createTime: row.createTime
+                }
+            },
+            changePwd(row) {
+                this.dialogFormTitle = '修改密码';
+                this.dialogChangePwdVisible = true;
+                this.userForm = {
+                    userId: row.userId,
+                    userType: row.roleId
+                }
+            },
+            deleteRow(row) {
+                this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(response => {
+                    deleteUser({userId: row.userId}).then(response => {
+                        this.$message({
+                            message: response.message,
+                            type: 'success'
+                        })
+                        this.getUserList()
+                    }).catch(() => {
+                        this.loading = false
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        },
+        mounted() {
+            this.getUserList()
+        }
     }
-  },
-  mounted() {
-    this.getUserList()
-  }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -511,9 +514,11 @@ export default {
     width: 120px;
     height: 120px;
   }
+
   .avatar-uploader:hover {
     border-color: #409EFF;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -522,6 +527,7 @@ export default {
     line-height: 120px;
     text-align: center;
   }
+
   .avatar {
     width: 120px;
     height: 120px;

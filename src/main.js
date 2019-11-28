@@ -13,7 +13,7 @@ import store from './store'
 import VueResource from 'vue-resource'
 import router from './router'
 
-Vue.use(VueResource);
+Vue.use(VueResource)
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -28,7 +28,7 @@ import * as filters from './filters' // global filters
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
-/*import { mockXHR } from '../mock'
+/* import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }*/

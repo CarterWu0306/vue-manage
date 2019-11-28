@@ -43,7 +43,7 @@ export const constantRoutes = [
         path: '/menu/index',
         component: () => import('@/views/menu/index'),
         name: 'Foods',
-        meta: { title: '点餐', icon: 'menu', }
+        meta: { title: '点餐', icon: 'menu' }
       }
     ]
   },
@@ -88,7 +88,7 @@ export const constantRoutes = [
         meta: { title: '评价管理', icon: 'like' }
       }
     ]
-  },
+  }
 
   // 404 page must be placed at the end !!!
   // {

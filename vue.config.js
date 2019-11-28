@@ -34,7 +34,7 @@ module.exports = {
       errors: true
     },
     proxy: {
-      //本地接口测试
+      // 本地接口测试
       [process.env.VUE_APP_BASE_API]: {
         target: `http://localhost:9800`,
         ws: false,
@@ -43,16 +43,16 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      //图片上传接口代理
+      // 图片上传接口代理
       '/imgUpload': {
         target: `http://localhost:9800`,
         changeOrigin: true,
         pathRewrite: {
-          ['^/imgUpload']: ''
+          '^/imgUpload': ''
         }
       }
 
-      /*//mock接口代理
+      /* //mock接口代理
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
