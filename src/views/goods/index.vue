@@ -19,6 +19,7 @@
 
     <div style="padding-top: 20px">
       <el-table
+        v-loading="true"
         :data="tableData"
         height="750"
         border

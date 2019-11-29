@@ -22,6 +22,7 @@
     </div>
     <div>
       <el-table
+        v-loading="true"
         :data="tableData"
         height="618"
         style="width: 100%">

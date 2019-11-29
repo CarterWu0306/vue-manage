@@ -53,6 +53,7 @@
         </div>
       </div>
       <el-table
+        v-loading="true"
         :data="tableData"
         border
         height="700px"
@@ -191,29 +192,29 @@
         <el-table-column
           prop="orderCreateTime"
           label="订单创建时间"
-          width="250"
+          width="180"
           align="center"
           :formatter="dateFormat">
         </el-table-column>
         <el-table-column
           prop="orderPayTime"
           label="订单支付时间"
-          width="250"
+          width="180"
           align="center"
           :formatter="dateFormat">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="200"
+          width="300"
           align="center"
         >
           <template slot-scope="{row}">
+            <el-button type="success" size="mini" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
+              完成
+            </el-button>
             <el-button type="primary" size="mini">
               详情
-            </el-button>
-            <el-button type="success" size="mini" v-if="row.orderStatus==='0'">
-              完成
             </el-button>
             <el-button size="mini" type="danger">
               删除
@@ -351,7 +352,10 @@ export default {
                   return v[j]
               }
           }))
-        }
+        },
+      completeOrder(){
+          //完成订单接口
+      }
     }
 }
 </script>

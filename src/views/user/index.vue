@@ -20,6 +20,7 @@
 
     <div style="padding-top: 20px">
       <el-table
+        v-loading="true"
         :data="tableData"
         height="750"
         border
@@ -195,8 +196,8 @@
       <span slot="footer" class="dialog-footer">
           <el-button type="success" @click="backContinue">返回</el-button>
           <el-button type="info" @click="empty">清空</el-button>
-          <el-button type="primary" @click="addUser" v-show="this.dialogFormTitle==='新增用户'">确认新增</el-button>
-          <el-button type="primary" @click="editUser" v-show="this.dialogFormTitle==='编辑用户'">确认编辑</el-button>
+          <el-button type="primary" :loading="loading" @click="addUser" v-show="this.dialogFormTitle==='新增用户'">确认新增</el-button>
+          <el-button type="primary" :loading="loading" @click="editUser" v-show="this.dialogFormTitle==='编辑用户'">确认编辑</el-button>
         </span>
     </el-dialog>
 
@@ -220,7 +221,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button type="success" @click="backContinue">返回</el-button>
-          <el-button type="primary" @click="confirmChange">确认修改</el-button>
+          <el-button type="primary" :loading="loading" @click="confirmChange">确认修改</el-button>
         </span>
     </el-dialog>
   </div>
@@ -303,6 +304,7 @@
                         roleName: '普通会员'
                     }
                 ],
+                loading: false,
                 dialogFormVisible: false,
                 dialogChangePwdVisible: false,
                 dialogFormTitle: '',
