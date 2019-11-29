@@ -59,6 +59,11 @@
         style="width: 100%"
       >
         <el-table-column
+          prop="orderId"
+          label="订单ID"
+          v-if="false">
+        </el-table-column>
+        <el-table-column
           prop="orderSn"
           label="订单编号"
           width="320"
