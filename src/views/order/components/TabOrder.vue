@@ -210,7 +210,10 @@
         >
           <template slot-scope="{row}">
             <el-button type="primary" size="mini">
-              编辑<!--需修改-->
+              详情
+            </el-button>
+            <el-button type="success" size="mini" v-if="row.orderStatus==='0'">
+              完成
             </el-button>
             <el-button size="mini" type="danger">
               删除
