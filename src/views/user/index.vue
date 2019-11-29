@@ -32,12 +32,6 @@
         >
         </el-table-column>
         <el-table-column
-          prop="userId"
-          label="用户ID"
-          v-if="false"
-        >
-        </el-table-column>
-        <el-table-column
           type="selection"
           width="55">
         </el-table-column>

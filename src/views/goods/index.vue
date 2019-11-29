@@ -25,6 +25,11 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column
+          prop="goodsId"
+          label="商品ID"
+          v-if="false"
+        >
+        <el-table-column
           fixed
           prop="goodsName"
           label="商品名称"
