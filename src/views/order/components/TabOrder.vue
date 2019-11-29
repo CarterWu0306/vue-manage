@@ -65,6 +65,60 @@
           v-if="false">
         </el-table-column>
         <el-table-column
+          prop="orderRemarks"
+          label="备注"
+          v-if="false">
+        </el-table-column>
+        <el-table-column
+          prop="deductionScore"
+          label="抵扣积分"
+          v-if="false">
+        </el-table-column>
+        <el-table-column
+          prop="orderScore"
+          label="所得积分"
+          v-if="false">
+        </el-table-column>
+        <el-table-column
+          prop="payStatus"
+          label="支付状态"
+          v-if="false">
+          <!--<template slot-scope="{row}">
+            <span v-if="row.payStatus==='0'">
+              未支付
+            </span>
+            <span v-if="row.payStatus==='1'">
+              已支付
+            </span>
+          </template>-->
+        </el-table-column>
+        <el-table-column
+          prop="isAppraise"
+          label="是否点评"
+          v-if="false">
+          <!--<template slot-scope="{row}">
+            <span v-if="row.isAppraise==='0'">
+              未点评
+            </span>
+            <span v-if="row.isAppraise==='1'">
+              已点评
+            </span>
+          </template>-->
+        </el-table-column>
+        <el-table-column
+          prop="isRefund"
+          label="是否退款"
+          v-if="false">
+          <!--<template slot-scope="{row}">
+            <span v-if="row.isRefund==='0'">
+              未退款
+            </span>
+            <span v-if="row.isRefund==='1'">
+              已退款
+            </span>
+          </template>-->
+        </el-table-column>
+        <el-table-column
           prop="orderSn"
           label="订单编号"
           width="320"
@@ -107,11 +161,6 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="orderRemarks"
-          label="备注"
-          width="160">
-        </el-table-column>
-        <el-table-column
           prop="orderStatus"
           label="订单状态"
           width="120"
@@ -131,63 +180,6 @@
               订单完成
             </span>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="payStatus"
-          label="支付状态"
-          width="120"
-          align="center"
-        >
-          <template slot-scope="{row}">
-            <span v-if="row.payStatus==='0'">
-              未支付
-            </span>
-            <span v-if="row.payStatus==='1'">
-              已支付
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="isAppraise"
-          label="是否点评"
-          width="120"
-          align="center"
-        >
-          <template slot-scope="{row}">
-            <span v-if="row.isAppraise==='0'">
-              未点评
-            </span>
-            <span v-if="row.isAppraise==='1'">
-              已点评
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="isRefund"
-          label="是否退款"
-          width="120"
-          align="center"
-        >
-          <template slot-scope="{row}">
-            <span v-if="row.isRefund==='0'">
-              未退款
-            </span>
-            <span v-if="row.isRefund==='1'">
-              已退款
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="deductionScore"
-          label="抵扣积分"
-          width="120"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="orderScore"
-          label="所得积分"
-          width="120"
-          align="center">
         </el-table-column>
         <el-table-column
           prop="orderCreateTime"
