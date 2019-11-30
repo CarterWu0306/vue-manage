@@ -43,7 +43,7 @@
             style="width: 350px;float:left;padding-left: 20px;"
             class="filter-item">
           </el-input>
-          <el-button class="filter-item" style="margin-left: 10px;float:left;" type="primary" icon="el-icon-search">
+          <el-button class="filter-item" style="margin-left: 10px;float:left;" type="primary" icon="el-icon-search" @click="select">
             查询
           </el-button>
         </div>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <el-table
-        v-loading="true"
+        v-loading="tableLoading"
         :data="tableData"
         border
         height="700px"
@@ -121,13 +121,12 @@
         <el-table-column
           prop="orderSn"
           label="订单编号"
-          width="320"
           align="center">
         </el-table-column>
         <el-table-column
           prop="nickName"
           label="用户昵称"
-          width="200"
+          width="180"
           align="center">
         </el-table-column>
         <el-table-column
@@ -157,13 +156,13 @@
         <el-table-column
           prop="realTotalMoney"
           label="实付金额"
-          width="120"
+          width="100"
           align="center">
         </el-table-column>
         <el-table-column
           prop="orderStatus"
           label="订单状态"
-          width="120"
+          width="100"
           align="center"
         >
           <template slot-scope="{row}">
@@ -184,21 +183,21 @@
         <el-table-column
           prop="orderCreateTime"
           label="订单创建时间"
-          width="180"
+          width="160"
           align="center"
           :formatter="dateFormat">
         </el-table-column>
         <el-table-column
           prop="orderPayTime"
           label="订单支付时间"
-          width="180"
+          width="160"
           align="center"
           :formatter="dateFormat">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="300"
+          width="250"
           align="center"
         >
           <template slot-scope="{row}">
@@ -251,11 +250,17 @@ export default {
             dateRange: 'today',
             tabType: this.tabType
           },
+          tableLoading: false,
           downloadLoading: false
       }
   },
   mounted() {
-      this.getOrderList()
+      if (this.tabType === 'AllOrders'){
+          this.dateRangeChange('all')
+      }else{
+          this.getOrderList()
+      }
+
   },
   methods: {
       dateFormat(row, column) {
@@ -269,10 +274,15 @@ export default {
           this.listQuery.dateRange = dateType;
           this.getOrderList();
       },
+      select(){
+          this.getOrderList()
+      },
       getOrderList() {
+          this.tableLoading = true
           getOrderList(this.listQuery).then(response => {
               this.total = response.total
               this.tableData = response.data
+              this.tableLoading = false
           })
       },
       handleDownload() {

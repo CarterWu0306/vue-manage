@@ -23,7 +23,7 @@ export default {
           },
           {
               id: 2,
-              label: '全部订单',
+              label: '所有订单',
               key: 'AllOrders'
           }
       ],

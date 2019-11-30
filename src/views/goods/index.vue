@@ -19,7 +19,7 @@
 
     <div style="padding-top: 20px">
       <el-table
-        v-loading="true"
+        v-loading="tableLoading"
         :data="tableData"
         height="750"
         border
@@ -30,6 +30,7 @@
           label="商品ID"
           v-if="false"
         >
+        </el-table-column>
         <el-table-column
           fixed
           prop="goodsName"
@@ -293,6 +294,7 @@ export default {
         goodsPrice: [{required: true, trigger: 'change', validator: validatePrice}]
       },
       recognizeResult: [],
+      tableLoading: false,
       loading: false,
       dialogFormVisible: false,
       recognizeVisible: false,
@@ -315,9 +317,11 @@ export default {
       return moment(date).format("YYYY-MM-DD HH:mm")
     },
     getList () {
+      this.tableLoading = true
       getList(this.listQuery).then(response => {
         this.total = response.total
         this.tableData = response.data
+        this.tableLoading = false
       })
     },
     addGoods () {

@@ -20,7 +20,7 @@
 
     <div style="padding-top: 20px">
       <el-table
-        v-loading="true"
+        v-loading="tableLoading"
         :data="tableData"
         height="750"
         border
@@ -304,6 +304,7 @@
                         roleName: '普通会员'
                     }
                 ],
+                tableLoading: false,
                 loading: false,
                 dialogFormVisible: false,
                 dialogChangePwdVisible: false,
@@ -333,9 +334,11 @@
                 return moment(date).format("YYYY-MM-DD HH:mm:ss")
             },
             getUserList() {
+                this.tableLoading = true;
                 getUserList(this.listQuery).then(response => {
-                    this.total = response.total
-                    this.tableData = response.data
+                    this.total = response.total;
+                    this.tableData = response.data;
+                    this.tableLoading = false;
                 })
             },
             resetUser() {
