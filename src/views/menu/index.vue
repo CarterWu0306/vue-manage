@@ -27,7 +27,7 @@ export default {
       getAllGoodsList().then(response => {
         const data = response.data
         data.forEach((item) => {
-          item.num = 0
+          item.goodsNum = 0
         })
         this.foods = data
       })

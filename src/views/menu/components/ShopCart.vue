@@ -21,11 +21,11 @@
       <div class="dialog">
         <span v-show="!selectedFoods.length>0" class="shop-cart-empty">当前购物车为空</span>
         <div v-for="(food,index) in foods" :key="food.goodsId" class="label">
-          <span v-show="food.num" class="food-name">{{ food.goodsName }}</span>
-          <div v-show="food.num" style="float: right">
-            <span class="food-price">￥{{ food.goodsPrice * food.num }}</span>
+          <span v-show="food.goodsNum" class="food-name">{{ food.goodsName }}</span>
+          <div v-show="food.goodsNum" style="float: right">
+            <span class="food-price">￥{{ food.goodsPrice * food.goodsNum }}</span>
             <svg-icon icon-class="decrease" class="button" @click="decreaseFood(index)" />
-            <span class="button-count">{{ food.num }}</span>
+            <span class="button-count">{{ food.goodsNum }}</span>
             <svg-icon icon-class="add" class="button" @click="addFood(index)" />
           </div>
         </div>
@@ -67,15 +67,15 @@ export default {
     totalCount() {
       let count = 0
       this.foods.forEach((food) => {
-        count += food.num
+        count += food.goodsNum
       })
       return count
     },
     totalPrice() {
       let price = 0
       this.foods.forEach((food) => {
-        if (food.num) {
-          price += food.goodsPrice * food.num
+        if (food.goodsNum) {
+          price += food.goodsPrice * food.goodsNum
         }
       })
       if (price === 0) {
@@ -91,8 +91,8 @@ export default {
       this.dialogFormVisible = true
       this.orderForm = {
         userId: this.$store.getters.userId,
-        totalMoney: this.totalCount().toFixed(2),
-        realTotalMoney: this.totalCount().toFixed(2),
+        totalMoney: this.totalPrice.toFixed(2),
+        realTotalMoney: this.totalPrice.toFixed(2),
         deductionScore: 0,
         goodsList: this.selectedFoods
       }
@@ -100,17 +100,17 @@ export default {
     selected() {
       this.selectedFoods = []
       this.foods.forEach((food) => {
-        if (food.num) {
+        if (food.goodsNum) {
           this.selectedFoods.push(food)
         }
       })
     },
     addFood(index) {
-      this.foods[index].num++
+      this.foods[index].goodsNum++
     },
     decreaseFood(index) {
-      if (this.foods[index].num > 0) {
-        this.foods[index].num--
+      if (this.foods[index].goodsNum > 0) {
+        this.foods[index].goodsNum--
       }
     },
     backContinue() {
@@ -119,7 +119,7 @@ export default {
     empty() {
       this.selectedFoods = []
       this.foods.forEach((food) => {
-        food.num = 0
+        food.goodsNum = 0
       })
     },
     placeOrder() {
@@ -131,6 +131,7 @@ export default {
           message: response.message,
           type: 'success'
         })
+        this.empty()
       }).catch(() => {
         this.loading = false
       })

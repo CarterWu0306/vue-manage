@@ -8,7 +8,7 @@
           <span class="food-price">￥{{food.goodsPrice}}/份</span>
           <div style="float: right">
             <svg-icon iconClass="decrease" class="button" @click="decreaseFood(index)"></svg-icon>
-            <span class="button-count">{{food.num}}</span>
+            <span class="button-count">{{food.goodsNum}}</span>
             <svg-icon iconClass="add" class="button" @click="addFood(index)"></svg-icon>
           </div>
         </div>
@@ -25,11 +25,11 @@ export default {
   },
   methods:{
     addFood(index) {
-      this.foods[index].num++
+      this.foods[index].goodsNum++
     },
     decreaseFood(index) {
-      if (this.foods[index].num>0){
-        this.foods[index].num--
+      if (this.foods[index].goodsNum>0){
+        this.foods[index].goodsNum--
       }
     }
   }
