@@ -152,12 +152,22 @@
           label="订单总金额"
           width="120"
           align="center">
+          <template slot-scope="{row}">
+            <el-tag type="danger">
+              {{ row.totalMoney }}元
+            </el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="realTotalMoney"
           label="实付金额"
           width="100"
           align="center">
+          <template slot-scope="{row}">
+            <el-tag type="danger">
+              {{ row.realTotalMoney }}元
+            </el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="orderStatus"
@@ -166,18 +176,18 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span v-if="row.orderStatus==='-2'">
+            <el-tag type="danger" v-if="row.orderStatus==='-2'">
               订单取消
-            </span>
-            <span v-if="row.orderStatus==='-1'">
+            </el-tag>
+            <el-tag type="info" v-if="row.orderStatus==='-1'">
               待付款
-            </span>
-            <span v-if="row.orderStatus==='0'">
+            </el-tag>
+            <el-tag v-if="row.orderStatus==='0'">
               制作中
-            </span>
-            <span v-if="row.orderStatus==='1'">
+            </el-tag>
+            <el-tag type="success" v-if="row.orderStatus==='1'">
               订单完成
-            </span>
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column
