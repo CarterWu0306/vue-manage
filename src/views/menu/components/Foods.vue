@@ -25,12 +25,19 @@ export default {
   },
   methods:{
     addFood(index) {
-      this.foods[index].goodsNum++
+        if (this.foods[index].goodsStock>this.foods[index].goodsNum){
+            this.foods[index].goodsNum++
+        }else {
+            this.$message({
+                message: '该商品库存不足',
+                type: 'warning'
+            })
+        }
     },
     decreaseFood(index) {
-      if (this.foods[index].goodsNum>0){
-        this.foods[index].goodsNum--
-      }
+        if (this.foods[index].goodsNum>0){
+           this.foods[index].goodsNum--
+        }
     }
   }
 }
