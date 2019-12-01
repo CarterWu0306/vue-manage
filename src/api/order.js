@@ -23,10 +23,10 @@ export function completeOrder(data) {
   })
 }
 
-export function deleteOrder(param) {
+export function deleteOrder(params) {
   return request({
     url: '/food-order/order/deleteOrder',
     method: 'get',
-    param
+    params
   })
 }
