@@ -211,13 +211,13 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <el-button type="success" size="mini" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
+            <el-button type="success" size="mini" :loading="loading" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
               完成
             </el-button>
             <el-button type="primary" size="mini">
               详情
             </el-button>
-            <el-button size="mini" type="danger">
+            <el-button size="mini" type="danger" :loading="loading" @click="deleteOrder(row)">
               删除
             </el-button>
           </template>
@@ -237,7 +237,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList, getAllOrders} from '@/api/order'
+import { getOrderList, getAllOrders, completeOrder, deleteOrder} from '@/api/order'
 import { parseTime } from '@/utils'
 import moment from 'moment'
 
@@ -261,6 +261,7 @@ export default {
             tabType: this.tabType
           },
           tableLoading: false,
+          loading: false,
           downloadLoading: false
       }
   },
@@ -365,8 +366,43 @@ export default {
               }
           }))
         },
-      completeOrder(){
+      completeOrder(row){
+          this.tableLoading = true;
           //完成订单接口
+          completeOrder({ orderId: row.orderId}).then(response => {
+              this.tableLoading = false;
+              this.$message({
+                  message: response.message,
+                  type: 'success'
+              });
+              this.getOrderList();
+          }).catch(() => {
+              this.loading = false
+          })
+      },
+      deleteOrder(row){
+          this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(response => {
+              this.loading = true
+              deleteOrder({ orderId: row.orderId }).then(response =>{
+                  this.$message({
+                      message: response.message,
+                      type: 'success'
+                  })
+                  this.getOrderList()
+              }).catch(() => {
+                  this.loading = false
+              })
+          }).catch(() => {
+              this.loading = false
+              this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+              });
+          });
       }
     }
 }
