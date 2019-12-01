@@ -31,7 +31,7 @@
         </div>
       </div>
       <div v-show="selectedFoods.length>0" class="shop-cart-price">小计￥{{ totalPrice }}元</div>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer" v-show="selectedFoods.length>0">
         <el-button type="success" @click="backContinue">继续点餐</el-button>
         <el-button type="info" @click="empty">清空</el-button>
         <el-button type="primary" :loading="loading" @click="placeOrder">下单</el-button>
@@ -123,18 +123,18 @@ export default {
       })
     },
     placeOrder() {
-      this.loading = true
-      placeOrderByAdmin(this.orderForm).then(response => {
-        this.loading = false
-        this.dialogFormVisible = false
-        this.$message({
-          message: response.message,
-          type: 'success'
+        this.loading = true
+        placeOrderByAdmin(this.orderForm).then(response => {
+          this.loading = false
+          this.dialogFormVisible = false
+          this.$message({
+            message: response.message,
+            type: 'success'
+          })
+          this.empty()
+        }).catch(() => {
+          this.loading = false
         })
-        this.empty()
-      }).catch(() => {
-        this.loading = false
-      })
     }
   }
 }
