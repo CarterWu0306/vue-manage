@@ -14,3 +14,19 @@ export function getAllOrders() {
     method: 'get'
   })
 }
+
+export function completeOrder(data) {
+  return request({
+    url: '/food-order/order/completeOrder',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteOrder(param) {
+  return request({
+    url: '/food-order/order/deleteOrder',
+    method: 'get',
+    param
+  })
+}
