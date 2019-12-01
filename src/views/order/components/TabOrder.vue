@@ -207,17 +207,17 @@
         <el-table-column
           fixed="right"
           label="操作"
-          width="250"
+          width="260"
           align="center"
         >
           <template slot-scope="{row}">
-            <el-button type="success" size="mini" :loading="loading" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
+            <el-button type="success" size="mini" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
               完成
             </el-button>
             <el-button type="primary" size="mini">
               详情
             </el-button>
-            <el-button size="mini" type="danger" :loading="loading" @click="deleteOrder(row)">
+            <el-button size="mini" type="danger" @click="deleteOrder(row)">
               删除
             </el-button>
           </template>
@@ -261,7 +261,6 @@ export default {
             tabType: this.tabType
           },
           tableLoading: false,
-          loading: false,
           downloadLoading: false
       }
   },
@@ -293,6 +292,8 @@ export default {
           getOrderList(this.listQuery).then(response => {
               this.total = response.total
               this.tableData = response.data
+              this.tableLoading = false
+          }).catch(() => {
               this.tableLoading = false
           })
       },
@@ -367,17 +368,14 @@ export default {
           }))
         },
       completeOrder(row){
-          this.tableLoading = true;
           //完成订单接口
           completeOrder({ orderId: row.orderId}).then(response => {
-              this.tableLoading = false;
               this.$message({
                   message: response.message,
                   type: 'success'
               });
               this.getOrderList();
           }).catch(() => {
-              this.loading = false
           })
       },
       deleteOrder(row){
@@ -386,7 +384,6 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
           }).then(response => {
-              this.loading = true
               deleteOrder({ orderId: row.orderId }).then(response =>{
                   this.$message({
                       message: response.message,
@@ -394,10 +391,8 @@ export default {
                   })
                   this.getOrderList()
               }).catch(() => {
-                  this.loading = false
               })
           }).catch(() => {
-              this.loading = false
               this.$message({
                   type: 'info',
                   message: '已取消删除'

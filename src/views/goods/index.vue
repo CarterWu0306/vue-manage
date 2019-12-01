@@ -129,13 +129,13 @@
             <el-button type="primary" size="mini" @click="edit(row)">
               编辑
             </el-button>
-            <el-button v-if="row.goodsStatus!= '1'" size="mini" type="success" :loading="loading" @click="handleModifyStatus(row,'1')">
+            <el-button v-if="row.goodsStatus!= '1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
               上架
             </el-button>
             <el-button v-if="row.goodsStatus!= '0'" size="mini" :loading="loading" @click="handleModifyStatus(row,'0')">
               下架
             </el-button>
-            <el-button size="mini" type="danger" :loading="loading" @click="deleteRow(row)">
+            <el-button size="mini" type="danger" @click="deleteRow(row)">
               删除
             </el-button>
           </template>
@@ -322,6 +322,8 @@ export default {
         this.total = response.total
         this.tableData = response.data
         this.tableLoading = false
+      }).catch(() => {
+          this.tableLoading = false
       })
     },
     addGoods () {
@@ -385,17 +387,14 @@ export default {
       console.log(val)
     },
     handleModifyStatus(row, goodsStatus) {
-        this.loading = true
         //修改上下架请求接口
         changeGoodsStatus({ goodsId: row.goodsId, goodsStatus: goodsStatus }).then(response =>{
             row.goodsStatus = goodsStatus;
-            this.tableLoading = false;
             this.$message({
                 message: response.message,
                 type: 'success'
             })
         }).catch(() => {
-            this.tableLoading = false
         })
     },
     //图像上传识别成功回调
@@ -457,10 +456,8 @@ export default {
               })
               this.getList()
           }).catch(() => {
-              this.loading = false
           })
       }).catch(() => {
-          this.loading = false
           this.$message({
             type: 'info',
             message: '已取消删除'

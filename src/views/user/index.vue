@@ -339,6 +339,8 @@
                     this.total = response.total;
                     this.tableData = response.data;
                     this.tableLoading = false;
+                }).catch(() => {
+                    this.tableLoading = false
                 })
             },
             resetUser() {
@@ -487,7 +489,6 @@
                         })
                         this.getUserList()
                     }).catch(() => {
-                        this.loading = false
                     })
                 }).catch(() => {
                     this.$message({
