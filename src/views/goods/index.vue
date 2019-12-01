@@ -132,7 +132,7 @@
             <el-button v-if="row.goodsStatus!= '1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
               上架
             </el-button>
-            <el-button v-if="row.goodsStatus!= '0'" size="mini" :loading="loading" @click="handleModifyStatus(row,'0')">
+            <el-button v-if="row.goodsStatus!= '0'" size="mini" @click="handleModifyStatus(row,'0')">
               下架
             </el-button>
             <el-button size="mini" type="danger" @click="deleteRow(row)">
