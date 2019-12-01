@@ -22,7 +22,7 @@
     </div>
     <div>
       <el-table
-        v-loading="true"
+        v-loading="tableLoading"
         :data="tableData"
         height="618"
         style="width: 100%">
@@ -188,146 +188,147 @@ export default {
   },
   data() {
     return {
-      total: 10,
-      listQuery: {
-        page: 1,
-        limit: 10,
-        dateRange: 'week',
-        starLevel: 'all',
-        tabType: this.tabType
-      },
-      tableData: [
-          {
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '0',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '0',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '0',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-          },{
-            orderNo: '12987122',
-            userID: '100001',
-            userName: '章潇裕',
-            evaluationType: '1',
-            evaluationScore: 3.7,
-            evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-            evaluationCreateTime: '2019-09-11',
-            evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-            businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-            businessReplyCreateTime: '2019-09-11',
-            isShow: '1',
-            statusFlag: '1'
-      }]
+        total: 10,
+        listQuery: {
+          page: 1,
+          limit: 10,
+          dateRange: 'week',
+          starLevel: 'all',
+          tabType: this.tabType
+        },
+        tableData: [
+            {
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '0',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '0',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '0',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+            },{
+              orderNo: '12987122',
+              userID: '100001',
+              userName: '章潇裕',
+              evaluationType: '1',
+              evaluationScore: 3.7,
+              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
+              evaluationCreateTime: '2019-09-11',
+              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
+              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
+              businessReplyCreateTime: '2019-09-11',
+              isShow: '1',
+              statusFlag: '1'
+        }],
+        tableLoading: false
     }
   },
   methods: {
