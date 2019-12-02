@@ -38,7 +38,7 @@ import { sumNewUser } from '@/api/order'
 
 const lineChartData = {
   orders: {
-    title: "历史订单量",
+    title: "新增订单量",
     lineChatColor: "#3888fa",
     actualData: [280, 160, 151, 106, 145, 150, 120, 82, 91, 154, 162, 140]
   },
