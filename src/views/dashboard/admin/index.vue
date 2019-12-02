@@ -34,6 +34,7 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
+import { sumNewUser } from '@/api/order'
 
 const lineChartData = {
   orders: {
@@ -49,7 +50,7 @@ const lineChartData = {
   customers: {
     title: "新增顾客数",
     lineChatColor: "#34bfa3",
-    actualData: [120, 82, 91, 154, 162, 140, 120, 82, 91, 154, 162, 140]
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   },
   goods: {
     title: "历史商品量",
@@ -59,26 +60,39 @@ const lineChartData = {
 }
 
 export default {
-  name: 'DashboardAdmin',
-  components: {
-    GithubCorner,
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
-    BoxCard
-  },
-  data() {
-    return {
-      lineChartData: lineChartData.orders,
+    name: 'DashboardAdmin',
+    components: {
+        GithubCorner,
+        PanelGroup,
+        LineChart,
+        RaddarChart,
+        PieChart,
+        BarChart,
+        BoxCard
+    },
+    data() {
+        return {
+           lineChartData: lineChartData.orders,
+        }
+    },
+    methods: {
+        handleSetLineChartData(type) {
+            this.lineChartData = lineChartData[type]
+        },
+        sumNewUser() {
+            sumNewUser().then(response => {
+                const data = response.data;
+                data.forEach(item =>{
+                    const index = item.month;
+                    this.lineChartData.customers.actualData[index] = data.sum;
+                })
+            }).catch(() => {
+            })
+        }
+    },
+    mounted() {
+        this.sumNewUser();
     }
-  },
-  methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    }
-  }
 }
 </script>
 
