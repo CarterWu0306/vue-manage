@@ -79,6 +79,7 @@ export default {
           }
         },
         yAxis: {
+          minInterval: 1,
           axisTick: {
             show: false
           }
