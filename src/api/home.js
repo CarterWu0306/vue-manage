@@ -34,3 +34,10 @@ export function sumSalesLatestWeek() {
     method: 'get'
   })
 }
+
+export function sumFlowTime() {
+  return request({
+    url: '/food-order/order/sumFlowTime',
+    method: 'get'
+  })
+}
