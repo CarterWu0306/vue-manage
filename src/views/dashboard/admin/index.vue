@@ -46,7 +46,7 @@ const lineChartData = {
   sales: {
     title: "历史销售额",
     lineChatColor: "#f55e77",
-    actualData: [120, 90, 100, 138, 142, 130, 120, 82, 91, 154, 162, 140],
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     total: 0
   },
   customers: {
@@ -95,6 +95,17 @@ export default {
             }).catch(() => {
             })
         },
+        sumSales() {
+            sumSales().then(response => {
+                const data = response.data;
+                data.forEach(item =>{
+                    const index = item.month;
+                    lineChartData.sales.actualData[index-1] = item.sum;
+                    lineChartData.sales.total += item.sum;
+                })
+            }).catch(() => {
+            })
+        },
         sumNewUser() {
             sumNewUser().then(response => {
                 const data = response.data;
@@ -124,6 +135,7 @@ export default {
         }
     },
     mounted() {
+        this.sumSales();
         this.sumOrder();
         this.sumNewUser();
         this.sumGoods();

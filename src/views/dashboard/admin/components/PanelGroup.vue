@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             历史销售额
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="this.groupData.sales.total" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
