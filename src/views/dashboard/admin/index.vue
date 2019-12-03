@@ -84,7 +84,7 @@ export default {
                 const data = response.data;
                 data.forEach(item =>{
                     const index = item.month;
-                    this.lineChartData.customers.actualData[index] = data.sum;
+                    lineChartData.customers.actualData[index-1] = item.sum;
                 })
             }).catch(() => {
             })
