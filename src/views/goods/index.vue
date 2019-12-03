@@ -99,7 +99,10 @@
           width="120"
           align="center">
           <template slot-scope="{row}">
-            <el-tag type="warning">
+            <el-tag v-show="row.goodsStock>0">
+              {{ row.goodsStock }}
+            </el-tag>
+            <el-tag type="danger" v-show="row.goodsStock === 0">
               {{ row.goodsStock }}
             </el-tag>
           </template>
