@@ -124,7 +124,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
-      @pagination="getUserList"
+      @pagination="pagination"
       style="padding: 20px 16px 0px 16px;">
     </pagination>
 
@@ -332,6 +332,11 @@
                     return ''
                 }
                 return moment(date).format("YYYY-MM-DD HH:mm:ss")
+            },
+            pagination(data){
+                this.listQuery.page = data.page;
+                this.listQuery.limit = data.limit;
+                this.getUserList();
             },
             getUserList() {
                 this.tableLoading = true;

@@ -151,7 +151,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
-      @pagination="getList"
+      @pagination="pagination"
       style="padding: 20px 16px 0px 16px;">
     </pagination>
 
@@ -276,7 +276,7 @@ export default {
       ],
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 10,
         goodsName: '',
         goodsLabel: '',
         goodsStatus: ''
@@ -318,6 +318,11 @@ export default {
         return ''
       }
       return moment(date).format("YYYY-MM-DD HH:mm")
+    },
+    pagination(data){
+        this.listQuery.page = data.page;
+        this.listQuery.limit = data.limit;
+        this.getList();
     },
     getList () {
       this.tableLoading = true

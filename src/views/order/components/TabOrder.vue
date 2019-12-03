@@ -230,6 +230,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
+      @pagination="pagination"
       style="padding: 20px 16px 0px 16px;"
     />
   </div>
@@ -255,7 +256,7 @@ export default {
           total: 0,
           listQuery: {
             page: 1,
-            limit: 20,
+            limit: 10,
             orderSn: '',
             dateRange: 'today',
             tabType: this.tabType
@@ -287,14 +288,19 @@ export default {
       select(){
           this.getOrderList()
       },
+      pagination(data){
+          this.listQuery.page = data.page;
+          this.listQuery.limit = data.limit;
+          this.getOrderList();
+      },
       getOrderList() {
-          this.tableLoading = true
+          this.tableLoading = true;
           getOrderList(this.listQuery).then(response => {
-              this.total = response.total
-              this.tableData = response.data
-              this.tableLoading = false
+              this.total = response.total;
+              this.tableData = response.data;
+              this.tableLoading = false;
           }).catch(() => {
-              this.tableLoading = false
+              this.tableLoading = false;
           })
       },
       handleDownload() {
