@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="6" style="padding: 20px 30px 20px 30px;" v-for="(food,index) in foods" :key="food.goodsId">
-      <el-card class="card" :body-style="{ padding: '0px' }">
+      <el-card class="card" :body-style="{ padding: '0px' }" v-show="food.goodsStatus === '1'">
         <img :src="food.goodsImg" class="image">
         <div class="label">
           <span class="food-name">{{food.goodsName}}</span>
