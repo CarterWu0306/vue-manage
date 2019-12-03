@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             新增订单量
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="81212" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             历史销售额
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="9280" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -35,7 +35,7 @@
           <div class="card-panel-text">
             新增顾客数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="this.groupData.customers.total" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             历史商品量
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="this.groupData.goods.total" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -59,14 +59,17 @@
 import CountTo from 'vue-count-to'
 
 export default {
-  components: {
-    CountTo
-  },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+    props:{
+        groupData: Object
+    },
+    components: {
+        CountTo
+    },
+    methods: {
+        handleSetLineChartData(type) {
+           this.$emit('handleSetLineChartData', type)
+        }
     }
-  }
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <github-corner class="github-corner" />
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData" :groupData="groupData"/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chartData="lineChartData" :chartColor="lineChartData.lineChatColor" :chartTitle="lineChartData.title"/>
@@ -50,12 +50,14 @@ const lineChartData = {
   customers: {
     title: "新增顾客数",
     lineChatColor: "#34bfa3",
-    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    total: 0
   },
   goods: {
     title: "历史商品量",
     lineChatColor: "#ffb980",
-    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    total: 0
   }
 }
 
@@ -73,6 +75,7 @@ export default {
     data() {
         return {
            lineChartData: lineChartData.orders,
+           groupData: lineChartData
         }
     },
     methods: {
@@ -85,6 +88,7 @@ export default {
                 data.forEach(item =>{
                     const index = item.month;
                     lineChartData.customers.actualData[index-1] = item.sum;
+                    lineChartData.customers.total += item.sum;
                 })
             }).catch(() => {
             })
@@ -101,6 +105,7 @@ export default {
                         }
                     })
                 }
+                lineChartData.goods.total = lineChartData.goods.actualData[11];
             }).catch(() => {
             })
         }
