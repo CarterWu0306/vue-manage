@@ -85,6 +85,7 @@ export default {
             this.lineChartData = lineChartData[type]
         },
         sumOrder() {
+            lineChartData.orders.total = 0;
             sumOrder().then(response => {
                 const data = response.data;
                 data.forEach(item =>{
@@ -96,6 +97,7 @@ export default {
             })
         },
         sumSales() {
+            lineChartData.sales.total = 0;
             sumSales().then(response => {
                 const data = response.data;
                 data.forEach(item =>{
@@ -107,6 +109,7 @@ export default {
             })
         },
         sumNewUser() {
+            lineChartData.customers.total = 0;
             sumNewUser().then(response => {
                 const data = response.data;
                 data.forEach(item =>{
@@ -118,6 +121,7 @@ export default {
             })
         },
         sumGoods() {
+            lineChartData.goods.total = 0;
             sumGoods().then(response =>{
                 const data = response.data;
                 var nowYear = (new Date()).getFullYear();
