@@ -27,3 +27,10 @@ export function sumGoods() {
     method: 'get'
   })
 }
+
+export function sumSalesLatestWeek() {
+  return request({
+    url: '/food-order/order/sumSalesLatestWeek',
+    method: 'get'
+  })
+}
