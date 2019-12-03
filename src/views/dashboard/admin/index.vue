@@ -122,6 +122,7 @@ export default {
         },
         sumGoods() {
             lineChartData.goods.total = 0;
+            lineChartData.goods.actualData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             sumGoods().then(response =>{
                 const data = response.data;
                 var nowYear = (new Date()).getFullYear();
