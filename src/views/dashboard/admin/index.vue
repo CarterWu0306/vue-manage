@@ -34,7 +34,7 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
-import { sumNewUser } from '@/api/home'
+import { sumNewUser, sumGoods } from '@/api/home'
 
 const lineChartData = {
   orders: {
@@ -55,7 +55,7 @@ const lineChartData = {
   goods: {
     title: "历史商品量",
     lineChatColor: "#ffb980",
-    actualData: [120, 82, 91, 154, 162, 140, 120, 82, 91, 154, 162, 140]
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   }
 }
 
@@ -88,10 +88,26 @@ export default {
                 })
             }).catch(() => {
             })
+        },
+        sumGoods() {
+            sumGoods().then(response =>{
+                const data = response.data;
+                var nowYear = (new Date()).getFullYear();
+                var nowMonth = (new Date()).getMonth();
+                for (var i=0;i<12;i++){
+                    data.forEach(item =>{
+                        if (item.year<=nowYear&&item.month<=i+1){
+                            lineChartData.goods.actualData[i] += item.sum;
+                        }
+                    })
+                }
+            }).catch(() => {
+            })
         }
     },
     mounted() {
         this.sumNewUser();
+        this.sumGoods();
     }
 }
 </script>

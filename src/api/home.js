@@ -6,3 +6,10 @@ export function sumNewUser() {
     method: 'get'
   })
 }
+
+export function sumGoods() {
+  return request({
+    url: '/food-goods/goods/sumGoods',
+    method: 'get'
+  })
+}
