@@ -34,18 +34,20 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
-import { sumNewUser, sumGoods } from '@/api/home'
+import { sumOrder, sumSales, sumNewUser, sumGoods } from '@/api/home'
 
 const lineChartData = {
   orders: {
     title: "新增订单量",
     lineChatColor: "#3888fa",
-    actualData: [280, 160, 151, 106, 145, 150, 120, 82, 91, 154, 162, 140]
+    actualData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    total: 0
   },
   sales: {
     title: "历史销售额",
     lineChatColor: "#f55e77",
-    actualData: [120, 90, 100, 138, 142, 130, 120, 82, 91, 154, 162, 140]
+    actualData: [120, 90, 100, 138, 142, 130, 120, 82, 91, 154, 162, 140],
+    total: 0
   },
   customers: {
     title: "新增顾客数",
@@ -82,6 +84,17 @@ export default {
         handleSetLineChartData(type) {
             this.lineChartData = lineChartData[type]
         },
+        sumOrder() {
+            sumOrder().then(response => {
+                const data = response.data;
+                data.forEach(item =>{
+                    const index = item.month;
+                    lineChartData.orders.actualData[index-1] = item.sum;
+                    lineChartData.orders.total += item.sum;
+                })
+            }).catch(() => {
+            })
+        },
         sumNewUser() {
             sumNewUser().then(response => {
                 const data = response.data;
@@ -111,6 +124,7 @@ export default {
         }
     },
     mounted() {
+        this.sumOrder();
         this.sumNewUser();
         this.sumGoods();
     }

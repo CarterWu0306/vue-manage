@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             新增订单量
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3600" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="this.groupData.orders.total" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
