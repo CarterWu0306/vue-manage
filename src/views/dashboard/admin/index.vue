@@ -34,7 +34,7 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
-import { sumNewUser } from '@/api/order'
+import { sumNewUser } from '@/api/home'
 
 const lineChartData = {
   orders: {
