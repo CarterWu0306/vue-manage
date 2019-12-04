@@ -47,7 +47,6 @@ export default {
         sumFlowTime() {
             sumFlowTime().then(response => {
                 const data = response.data;
-                console.log(data)
                 data.forEach(item =>{
                     if (item.hourOfDay>=5&&item.hourOfDay<=9){
                         this.chartData[0].value = item.sum;
