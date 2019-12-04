@@ -1,28 +1,11 @@
 <template>
-  <el-card class="box-card-component" style="">
-
+  <el-card class="box-card-component">
     <div style="position:relative;height: 255px;">
       <mallki class-name="mallki-text" text="热门商品" style="color: #f4516c;float: left;"/>
       <div style="padding-top: 45px;">
-        <div class="progress-item">
-          <span>北京烤鸭</span>
-          <el-progress :percentage="this.judgePercentage(100,90)" :color="this.judgeColor(100,90)"></el-progress>
-        </div>
-        <div class="progress-item">
-          <span>水煮肉片</span>
-          <el-progress :percentage="this.judgePercentage(50,90)" :color="this.judgeColor(50,90)"></el-progress>
-        </div>
-        <div class="progress-item">
-          <span>蒜蓉大虾</span>
-          <el-progress :percentage="this.judgePercentage(20,90)" :color="this.judgeColor(20,90)"></el-progress>
-        </div>
-        <div class="progress-item">
-          <span>蒜薹肥肠</span>
-          <el-progress :percentage="this.judgePercentage(20,90)" :color="this.judgeColor(10,90)"></el-progress>
-        </div>
-        <div class="progress-item">
-          <span>随便</span>
-          <el-progress :percentage="this.judgePercentage(10,90)" :color="this.judgeColor(10,90)"></el-progress>
+        <div class="progress-item" v-for="item in hotGoods" :key="item.goodsId">
+          <span>{{item.goodsName}}</span>
+          <el-progress :percentage="this.judgePercentage(item.sum,this.total)" :color="this.judgeColor(item.sum,this.total)"></el-progress>
         </div>
       </div>
     </div>
@@ -33,50 +16,67 @@
 import { mapGetters } from 'vuex'
 import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
+import { sumHotGoods } from '@/api/home'
 
 export default {
-  components: { PanThumb, Mallki },
+    components: { PanThumb, Mallki },
 
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        success: 'success',
-        pending: 'danger'
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          success: 'success',
+          pending: 'danger'
+        }
+        return statusMap[status]
       }
-      return statusMap[status]
-    }
-  },
-  data() {
-    return {
-      statisticsData: {
-        article_count: 1024,
-        pageviews_count: 1024
-      }
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
-  },
-  methods: {
-    judgePercentage (value,total) {
-      if ((value/total)*100>=100){
-        return 100
-      }
-      return Math.ceil((value/total)*100)
     },
-    judgeColor (value,total) {
-      if ((value/total)*100>=100){
-        return "#f55e77"
-      }
-      if ((value/total)*100<=20){
-        return "#ffb980"
-      }
+    data() {
+        return {
+            statisticsData: {
+                article_count: 1024,
+                pageviews_count: 1024
+            },
+            hotGoods: [],
+            total: 0
+        }
+    },
+    computed: {
+      ...mapGetters([
+        'name',
+        'avatar',
+        'roles'
+      ])
+    },
+    methods: {
+        judgePercentage (value,total) {
+            if ((value/total)*100>=100){
+                return 100
+            }
+            return Math.ceil((value/total)*100)
+        },
+        judgeColor (value,total) {
+            if ((value/total)*100>=100){
+                return "#f55e77"
+            }
+            if ((value/total)*100<=20){
+                return "#ffb980"
+            }
+        },
+        sumHotGoods(){
+            sumHotGoods().then(response => {
+                this.total = 0;
+                const data = response.data;
+                this.hotGoods = data;
+                data.forEach(item => {
+                    this.total += item.sum;
+                })
+            }).catch(() => {
+            })
+        }
+    },
+    mounted() {
+        this.sumHotGoods();
     }
-  }
 }
 </script>
 
