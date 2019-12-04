@@ -5,7 +5,7 @@
       <div style="padding-top: 45px;">
         <div class="progress-item" v-for="item in hotGoods" :key="item.goodsId">
           <span>{{item.goodsName}}</span>
-          <el-progress :percentage="this.judgePercentage(item.sum,this.total)" :color="this.judgeColor(item.sum,this.total)"></el-progress>
+          <el-progress :percentage="judgePercentage(item.sum,total)" :color="judgeColor(item.sum,total)"></el-progress>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
             return Math.ceil((value/total)*100)
         },
         judgeColor (value,total) {
-            if ((value/total)*100>=100){
+            if ((value/total)*100>=60){
                 return "#f55e77"
             }
             if ((value/total)*100<=20){
