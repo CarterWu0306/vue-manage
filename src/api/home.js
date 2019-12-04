@@ -41,3 +41,10 @@ export function sumFlowTime() {
     method: 'get'
   })
 }
+
+export function sumHotGoods() {
+  return request({
+    url: '/food-goods/goods/sumHotGoods',
+    method: 'get'
+  })
+}
