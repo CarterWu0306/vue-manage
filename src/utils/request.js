@@ -81,13 +81,13 @@ service.interceptors.response.use(
   error => {
     const res = error.response.data
     console.log('err' + error) // for debug
-    console.log(res)
     if (res.code === 401) {
       Message({
         message: res.message,
         type: 'warning',
         duration: 5 * 1000
-      })
+      });
+      setTimeout(location.reload(),1000);
     }else if (res.status === 404) {
       Message({
         message: "服务器未响应",
