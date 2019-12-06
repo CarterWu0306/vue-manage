@@ -153,6 +153,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
+      @pagination="pagination"
       style="padding: 20px 16px 0px 16px;">
     </pagination>
   </div>
@@ -203,6 +204,11 @@ export default {
         },
         starLevelChange(starLevel) {
            this.listQuery.starLevel = starLevel;
+            this.getEvaluationList();
+        },
+        pagination(data){
+            this.listQuery.page = data.page;
+            this.listQuery.limit = data.limit;
             this.getEvaluationList();
         },
         getEvaluationList(){
