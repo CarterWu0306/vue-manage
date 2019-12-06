@@ -456,7 +456,6 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(response => {
-          this.loading = true
           deleteGoods({ goodsId: row.goodsId }).then(response =>{
               this.$message({
                   message: response.message,
