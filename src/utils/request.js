@@ -81,10 +81,16 @@ service.interceptors.response.use(
   error => {
     const res = error.response.data
     console.log('err' + error) // for debug
-    if (res.code === 401) {
+    if (res.status === 401) {
       Message({
         message: res.message,
         type: 'warning',
+        duration: 5 * 1000
+      })
+    }else if (res.status === 404) {
+      Message({
+        message: "服务器未响应",
+        type: 'error',
         duration: 5 * 1000
       })
     } else {
