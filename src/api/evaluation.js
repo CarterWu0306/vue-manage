@@ -7,10 +7,10 @@ export function sumEvaluation() {
   })
 }
 
-export function getEvaluationList(param) {
+export function getEvaluationList(params) {
   return request({
     url: '/food-evaluation/evaluation/getEvaluationList',
     method: 'get',
-    param
+    params
   })
 }
