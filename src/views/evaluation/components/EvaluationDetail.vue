@@ -140,7 +140,7 @@
             <el-button type="primary" size="mini">
               回复
             </el-button>
-            <el-button size="mini" type="danger">
+            <el-button size="mini" type="danger" @click="deleteRow(row)">
               删除
             </el-button>
           </template>
@@ -162,7 +162,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
-import { getEvaluationList } from '@/api/evaluation'
+import { getEvaluationList, deleteEvaluation } from '@/api/evaluation'
 
 export default {
     name: "EvaluationDetail",
@@ -220,6 +220,27 @@ export default {
                 })
                 this.tableData = data;
             }).catch()
+        },
+        deleteRow(row){
+            this.$confirm('此操作将永久删除该评价, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(response => {
+                deleteEvaluation({ evaluationId: row.evaluationId }).then(response =>{
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    })
+                    this.getEvaluationList()
+                }).catch(() => {
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
         }
     },
     mounted() {
