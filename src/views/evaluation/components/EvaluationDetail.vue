@@ -17,7 +17,7 @@
       <el-row style="padding: 10px 20px 20px 40px;">
         <el-button type="success" :plain="!(listQuery.starLevel==='all')" @click="starLevelChange('all')">全部</el-button>
         <el-button type="success" :plain="!(listQuery.starLevel==='highLevel')" @click="starLevelChange('highLevel')">好评(4-5星)</el-button>
-        <el-button type="success" :plain="!(listQuery.starLevel==='lowLevel')" @click="starLevelChange('lowLevel')">中差评(1-3星)</el-button>
+        <el-button type="success" :plain="!(listQuery.starLevel==='lowLevel')" @click="starLevelChange('lowLevel')">中差评(低于3星)</el-button>
       </el-row>
     </div>
     <div>
