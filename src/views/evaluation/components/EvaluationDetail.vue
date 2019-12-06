@@ -161,6 +161,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
+import { getEvaluationList } from '@/api/evaluation'
 
 export default {
     name: "EvaluationDetail",
@@ -170,7 +171,7 @@ export default {
     },
     data() {
       return {
-          total: 10,
+          total: 0,
           listQuery: {
             page: 1,
             limit: 10,
@@ -178,25 +179,7 @@ export default {
             starLevel: '',
             tabType: this.tabType
           },
-          tableData: [
-              {
-                  //evaluationId: 2,
-                  orderSn: "c404e54d-4814-44c6-97f8-80dfeb91d9ed",
-                  orderScore: 5,
-                  nickName: "猪突猛进",
-                  content: "hehehe",
-                  images: [
-                      "http://images.wukate.com/defaultGoods.jpg",
-                      "http://images.wukate.com/defaultGoods.jpg"
-                  ],
-                  isReply: "0",
-                  replyContent: "嗯嗯",
-                  createTime: "2019-12-06T05:54:58.000+0000",
-                  replyTime: "2019-12-06T05:54:58.000+0000",
-                  //orderId: 37,
-                  //userId: 14,
-                  isShow: "1"
-              }],
+          tableData: [],
           tableLoading: false
       }
     },
@@ -216,10 +199,25 @@ export default {
         },
         dateRangeChange(dateType) {
            this.listQuery.dateRange = dateType;
+           this.getEvaluationList();
         },
         starLevelChange(starLevel) {
            this.listQuery.starLevel = starLevel;
+            this.getEvaluationList();
+        },
+        getEvaluationList(){
+            getEvaluationList(this.listQuery).then(response => {
+                const data = response.data;
+                this.total = response.total;
+                data.forEach(item => {
+                    item.images = item.images.split(';')
+                })
+                this.tableData = data;
+            }).catch()
         }
+    },
+    mounted() {
+        this.getEvaluationList();
     }
 }
 </script>
