@@ -28,7 +28,7 @@
         name: "EvaluationCard",
         data() {
             return {
-                value: 5,
+                value: 5.0,
                 evaluationNumber: 0
             }
         },
