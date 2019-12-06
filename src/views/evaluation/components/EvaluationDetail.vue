@@ -30,44 +30,44 @@
           <template slot-scope="{row}">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="订单编号:">
-                <span>{{ row.orderNo }}</span>
+                <span>{{ row.orderSn }}</span>
               </el-form-item>
-              <el-form-item label="用户ID:">
-                <span>{{ row.userID }}</span>
-              </el-form-item>
-              <el-form-item label="用户名:">
-                <span>{{ row.userName }}</span>
+              <el-form-item label="用户昵称:">
+                <span>{{ row.nickName }}</span>
               </el-form-item>
               <el-form-item label="评价类型:">
-                <span v-if="row.evaluationType === '1'">
+                <span v-if="row.orderScore >4 ">
                   好评
                 </span>
-                <span v-if="row.evaluationType === '0'">
+                <span v-if="row.orderScore <4 ">
                   中差评
                 </span>
               </el-form-item>
               <el-form-item label="订单评分:">
-                <span>{{ row.evaluationScore }}</span>
+                <span>{{ row.orderScore }}</span>
               </el-form-item>
-              <el-form-item label="上传图片:" width="150">
-                <el-popover
-                  placement="left"
-                  trigger="click">
-                  <img :src="row.evaluationImages" width="420" height="262" alt=""/>
-                  <img slot="reference" :src="row.evaluationImages" width="50" height="30" alt=""/>
-                </el-popover>
+              <el-form-item label="评价图片:" width="150" style="line-height: 60px;">
+                <span v-for="(item,index) in row.images" :key="index">
+                 <el-popover
+                   placement="left"
+                   trigger="click"
+                   style="margin-left: 5px;">
+                  <img :src="item" width="420" height="262" alt=""/>
+                  <img slot="reference" :src="item" width="100" height="60" alt=""/>
+                  </el-popover>
+                </span>
               </el-form-item>
-              <el-form-item label="点评内容:">
-                <span>{{ row.evaluationContent }}</span>
+              <el-form-item label="评价内容:">
+                <span>{{ row.content }}</span>
               </el-form-item>
-              <el-form-item label="商家回复:">
-                <span>{{ row.businessReply }}</span>
+              <el-form-item label="回复内容:">
+                <span>{{ row.replyContent }}</span>
               </el-form-item>
-              <el-form-item label="点评时间:">
-                <span>{{ row.evaluationCreateTime }}</span>
+              <el-form-item label="评价时间:">
+                <span>{{ formatDate(row.createTime) }}</span>
               </el-form-item>
-              <el-form-item label="商家回复时间:">
-                <span>{{ row.businessReplyCreateTime }}</span>
+              <el-form-item label="回复时间:">
+                <span>{{ formatDate(row.replyTime) }}</span>
               </el-form-item>
               <el-form-item label="是否显示:">
                 <span v-if="row.isShow === '1'">
@@ -77,61 +77,41 @@
                   不显示
                 </span>
               </el-form-item>
-              <el-form-item label="有效状态:">
-                <span v-if="row.statusFlag === '1'">
-                  有效
-                </span>
-                <span v-if="row.statusFlag === '0'">
-                  无效
-                </span>
-              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column
-          width="180"
-          label="订单编号"
-          prop="orderNo"
+          width="200"
+          label="用户昵称"
+          prop="nickName"
           align="center">
         </el-table-column>
         <el-table-column
-          width="180"
-          label="用户 ID"
-          prop="userID"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          width="150"
-          label="用户名"
-          prop="userName"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="evaluationType"
+          prop="orderScore"
           label="评价类型"
-          width="100">
+          width="120">
           <template slot-scope="{row}">
             <el-tag
-              :type="row.evaluationType === '1' ? 'danger' : 'info'"
+              :type="row.orderScore >4 ? 'danger' : 'info'"
               disable-transitions>
-              <div v-if="row.evaluationType === '1'">
+              <div v-if="row.orderScore >4 ">
                 好评
               </div>
-              <div v-if="row.evaluationType === '0'">
+              <div v-if="row.orderScore <4 ">
                 中差评
               </div>
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column
-          width="220"
+          width="280"
           label="订单评分"
-          prop="evaluationScore"
+          prop="orderScore"
           align="center">
           <template slot-scope="{row}">
             <div class="star">
               <el-rate
-                v-model="row.evaluationScore"
+                v-model="row.orderScore"
                 disabled
                 text-color="#ff9900"
                 score-template="{value}">
@@ -140,16 +120,16 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="点评内容"
-          prop="evaluationContent"
-          align="center"
+          label="评价内容"
+          prop="content"
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
           width="150"
           label="点评时间"
-          prop="evaluationCreateTime"
-          align="center">
+          prop="createTime"
+          align="center"
+          :formatter="dateFormat">
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -180,165 +160,67 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+import moment from 'moment'
+
 export default {
-  name: "EvaluationDetail",
-  components: { Pagination },
-  props: {
-    tabType: String
-  },
-  data() {
-    return {
-        total: 10,
-        listQuery: {
-          page: 1,
-          limit: 10,
-          dateRange: 'week',
-          starLevel: '',
-          tabType: this.tabType
-        },
-        tableData: [
-            {
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '0',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '0',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '0',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-            },{
-              orderNo: '12987122',
-              userID: '100001',
-              userName: '章潇裕',
-              evaluationType: '1',
-              evaluationScore: 3.7,
-              evaluationContent: '荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻,荷兰优质淡奶，奶香浓而不腻',
-              evaluationCreateTime: '2019-09-11',
-              evaluationImages: 'https://aip.bdstatic.com/portal/dist/1566472164929/ai_images/technology/imagerecognition/dish/demo/1.jpg',
-              businessReply: '商家回复你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好',
-              businessReplyCreateTime: '2019-09-11',
-              isShow: '1',
-              statusFlag: '1'
-        }],
-        tableLoading: false
-    }
-  },
-  methods: {
-    dateRangeChange(dateType) {
-      this.listQuery.dateRange = dateType;
+    name: "EvaluationDetail",
+    components: { Pagination },
+    props: {
+      tabType: String
     },
-    starLevelChange(starLevel) {
-      this.listQuery.starLevel = starLevel;
+    data() {
+      return {
+          total: 10,
+          listQuery: {
+            page: 1,
+            limit: 10,
+            dateRange: 'week',
+            starLevel: '',
+            tabType: this.tabType
+          },
+          tableData: [
+              {
+                  //evaluationId: 2,
+                  orderSn: "c404e54d-4814-44c6-97f8-80dfeb91d9ed",
+                  orderScore: 5,
+                  nickName: "猪突猛进",
+                  content: "hehehe",
+                  images: [
+                      "http://images.wukate.com/defaultGoods.jpg",
+                      "http://images.wukate.com/defaultGoods.jpg"
+                  ],
+                  isReply: "0",
+                  replyContent: "嗯嗯",
+                  createTime: "2019-12-06T05:54:58.000+0000",
+                  replyTime: "2019-12-06T05:54:58.000+0000",
+                  //orderId: 37,
+                  //userId: 14,
+                  isShow: "1"
+              }],
+          tableLoading: false
+      }
+    },
+    methods: {
+        dateFormat(row, column) {
+            var date = row[column.property]
+            if (date === undefined) {
+                return ''
+            }
+            return moment(date).format('YYYY-MM-DD HH:mm:ss')
+        },
+        formatDate(date){
+            if (date === undefined){
+                return ''
+            }
+            return moment(date).format('YYYY-MM-DD HH:mm:ss')
+        },
+        dateRangeChange(dateType) {
+           this.listQuery.dateRange = dateType;
+        },
+        starLevelChange(starLevel) {
+           this.listQuery.starLevel = starLevel;
+        }
     }
-  }
 }
 </script>
 
