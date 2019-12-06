@@ -14,3 +14,11 @@ export function getEvaluationList(params) {
     params
   })
 }
+
+export function deleteEvaluation(params) {
+  return request({
+    url: '/food-evaluation/evaluation/deleteEvaluation',
+    method: 'get',
+    params
+  })
+}
