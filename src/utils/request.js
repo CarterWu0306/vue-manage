@@ -81,7 +81,8 @@ service.interceptors.response.use(
   error => {
     const res = error.response.data
     console.log('err' + error) // for debug
-    if (res.status === 401) {
+    console.log(res)
+    if (res.code === 401) {
       Message({
         message: res.message,
         type: 'warning',
