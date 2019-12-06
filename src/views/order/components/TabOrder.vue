@@ -31,7 +31,7 @@
             size="mini"
             type="success"
             :plain="!(listQuery.dateRange==='all')"
-            @click="dateRangeChange('all')"
+            @click="dateRangeChange('')"
           >
             全部
           </el-button>
@@ -267,7 +267,7 @@ export default {
   },
   mounted() {
       if (this.tabType === 'AllOrders'){
-          this.dateRangeChange('all')
+          this.dateRangeChange('')
       }else{
           this.getOrderList()
       }
