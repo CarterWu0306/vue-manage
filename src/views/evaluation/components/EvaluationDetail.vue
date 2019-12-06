@@ -138,7 +138,7 @@
           align="center">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini">
-              编辑
+              回复
             </el-button>
             <el-button size="mini" type="danger">
               删除
