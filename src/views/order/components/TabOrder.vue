@@ -30,7 +30,7 @@
           <el-button
             size="mini"
             type="success"
-            :plain="!(listQuery.dateRange==='all')"
+            :plain="!(listQuery.dateRange==='')"
             @click="dateRangeChange('')"
           >
             全部
