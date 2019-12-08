@@ -22,3 +22,11 @@ export function deleteEvaluation(params) {
     params
   })
 }
+
+export function reply(data) {
+  return request({
+    url: '/food-evaluation/evaluation/reply',
+    method: 'post',
+    data
+  })
+}
