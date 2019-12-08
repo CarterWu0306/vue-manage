@@ -260,18 +260,27 @@ export default {
             }
         },
         reply(){
-            this.loading = true;
-            reply(this.replyForm).then(response => {
-                this.loading = false;
-                this.dialogVisible = false;
+            //判断回复内容不为空
+            if (this.replyForm.replyContent){
+                this.loading = true;
+                reply(this.replyForm).then(response => {
+                    this.loading = false;
+                    this.dialogVisible = false;
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    });
+                    this.getEvaluationList();
+                }).catch(() => {
+                    this.loading = false;
+                })
+            }else {
                 this.$message({
-                    message: response.message,
-                    type: 'success'
+                    message: '回复内容不能为空',
+                    type: 'warning'
                 });
-                this.getEvaluationList();
-            }).catch(() => {
-                this.loading = false;
-            })
+            }
+
         },
         deleteRow(row){
             this.$confirm('此操作将永久删除该评价, 是否继续?', '提示', {
