@@ -9,7 +9,8 @@
           <div style="float: right">
             <svg-icon iconClass="decrease" class="button" @click="decreaseFood(index)"></svg-icon>
             <span class="button-count">{{food.goodsNum}}</span>
-            <svg-icon iconClass="add" class="button" @click="addFood(index)"></svg-icon>
+            <svg-icon iconClass="add" class="button" @click="addFood(index)" v-show="food.goodsStock>0"></svg-icon>
+            <svg-icon iconClass="addForbidden" class="button" @click="addFood(index)" v-show="food.goodsStock<=0"></svg-icon>
           </div>
         </div>
       </el-card>
