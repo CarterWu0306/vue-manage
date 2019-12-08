@@ -313,9 +313,8 @@
       <div class="details-div">支付时间: <span class="details-span">{{ formatDate(orderDetails.orderPayTime) }}</span></div>
       <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="closeDetails">关闭详情</el-button>
-        </span>
+      </span>
     </el-dialog>
-
   </div>
 </template>
 
