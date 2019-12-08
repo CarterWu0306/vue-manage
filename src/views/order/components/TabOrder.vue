@@ -214,7 +214,7 @@
             <el-button type="success" size="mini" v-if="row.orderStatus==='0'" @click="completeOrder(row)">
               完成
             </el-button>
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" @click="handleCreate(row)">
               详情
             </el-button>
             <el-button size="mini" type="danger" @click="deleteOrder(row)">
@@ -233,6 +233,89 @@
       @pagination="pagination"
       style="padding: 20px 16px 0px 16px;"
     />
+
+    <el-dialog
+      title="订单详情"
+      width="600px"
+      @close=""
+      :visible.sync="dialogVisible"
+      center>
+      <div class="details-div">订单编号: <span class="details-span">{{ orderDetails.orderSn }}</span></div>
+      <div class="details-div">用户昵称: <span class="details-span">{{ orderDetails.nickName }}</span></div>
+      <div class="details-div">用户姓名: <span class="details-span">{{ orderDetails.realName }}</span></div>
+      <div class="details-div">订单总金额:
+        <span class="details-span">{{ orderDetails.totalMoney }}元</span>
+      </div>
+      <div class="details-div">实付金额:
+        <span class="details-span">{{ orderDetails.realTotalMoney }}元</span>
+      </div>
+      <div class="details-div">备注: <span class="details-span">{{ orderDetails.orderRemarks }}</span></div>
+      <div class="details-div">订单详情:
+        <span class="details-span">
+          <template>
+            <el-tag v-for="item in orderDetails.orderDetails" type="warning" style="margin-right: 10px;margin-top: 5px">
+              {{ item.goodsName }} X{{ item.goodsNum }}
+            </el-tag>
+          </template>
+        </span>
+      </div>
+      <div class="details-div">订单状态:
+        <span class="details-span">
+          <template>
+            <el-tag type="danger" v-if="orderDetails.orderStatus==='-2'">
+              订单取消
+            </el-tag>
+            <el-tag type="info" v-if="orderDetails.orderStatus==='-1'">
+              待付款
+            </el-tag>
+            <el-tag v-if="orderDetails.orderStatus==='0'">
+              制作中
+            </el-tag>
+            <el-tag type="success" v-if="orderDetails.orderStatus==='1'">
+              订单完成
+            </el-tag>
+          </template>
+        </span>
+      </div>
+      <div class="details-div">支付状态:
+        <span class="details-span">
+          <el-tag type="info" v-if="orderDetails.payStatus==='0'">
+              未支付
+          </el-tag>
+          <el-tag type="success" v-if="orderDetails.payStatus==='1'">
+              已支付
+          </el-tag>
+        </span>
+      </div>
+      <div class="details-div">是否评价:
+        <span class="details-span">
+          <el-tag type="info" v-if="orderDetails.isAppraise==='0'">
+              未评价
+          </el-tag>
+          <el-tag type="success" v-if="orderDetails.isAppraise==='1'">
+              已评价
+          </el-tag>
+        </span>
+      </div>
+      <div class="details-div">是否退款:
+        <span class="details-span">
+          <el-tag type="info" v-if="orderDetails.isRefund==='0'">
+              未退款
+          </el-tag>
+          <el-tag type="danger" v-if="orderDetails.isRefund==='1'">
+              已退款
+          </el-tag>
+        </span>
+      </div>
+      <div class="details-div">抵扣积分: <span class="details-span">{{ orderDetails.deductionScore }}</span></div>
+      <div class="details-div">所得积分: <span class="details-span">{{ orderDetails.orderScore }}</span></div>
+      <div class="details-div">创建时间: <span class="details-span">{{ formatDate(orderDetails.orderCreateTime) }}</span></div>
+      <div class="details-div">支付时间: <span class="details-span">{{ formatDate(orderDetails.orderPayTime) }}</span></div>
+      <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="closeDetails">关闭详情</el-button>
+        </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -253,6 +336,7 @@ export default {
   data() {
       return {
           tableData: [],
+          orderDetails: {},
           total: 0,
           listQuery: {
             page: 1,
@@ -262,7 +346,8 @@ export default {
             tabType: this.tabType
           },
           tableLoading: false,
-          downloadLoading: false
+          downloadLoading: false,
+          dialogVisible: false
       }
   },
   mounted() {
@@ -277,6 +362,12 @@ export default {
       dateFormat(row, column) {
           var date = row[column.property]
           if (date === undefined) {
+              return ''
+          }
+          return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      },
+      formatDate(date){
+          if (date === undefined){
               return ''
           }
           return moment(date).format('YYYY-MM-DD HH:mm:ss')
@@ -384,6 +475,13 @@ export default {
           }).catch(() => {
           })
       },
+      handleCreate(row) {
+          this.dialogVisible = true;
+          this.orderDetails = row
+      },
+      closeDetails(){
+          this.dialogVisible = false;
+      },
       deleteOrder(row){
           this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
               confirmButtonText: '确定',
@@ -410,9 +508,12 @@ export default {
 </script>
 
 <style lang="scss">
-  .order-date-picker {
-    .el-date-editor .el-range-separator {
-      padding: 0 0px;
+  .details-div{
+    font-weight: 700;
+    padding-bottom: 14px;
+    font-size: 15px;
+    .details-span{
+      font-weight: 500
     }
   }
 </style>
