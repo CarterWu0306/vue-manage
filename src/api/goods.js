@@ -46,3 +46,10 @@ export function deleteGoods(params) {
     params
   })
 }
+
+export function selGoodsLabel() {
+  return request({
+    url: '/food-goods/goods/selGoodsLabel',
+    method: 'get'
+  })
+}
