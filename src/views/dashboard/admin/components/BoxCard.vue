@@ -49,16 +49,16 @@ export default {
     },
     methods: {
         judgePercentage (value,total) {
-            if ((value/total)*100>=100){
+            if ((value/(total/2))*100>=100){
                 return 100
             }
-            return Math.ceil((value/total)*100)
+            return Math.ceil((value/(total/2))*100)
         },
         judgeColor (value,total) {
-            if ((value/total)*100>=60){
+            if ((value/(total/2))*100>=60){
                 return "#f55e77"
             }
-            if ((value/total)*100<=20){
+            if ((value/(total/2))*100<=20){
                 return "#ffb980"
             }
         },
