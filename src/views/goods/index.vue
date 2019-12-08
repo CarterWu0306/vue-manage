@@ -3,7 +3,11 @@
     <div class="filter-container">
       <el-input v-model="listQuery.goodsName" placeholder="商品名称" style="width: 200px;" class="filter-item"></el-input>
       <el-select v-model="listQuery.goodsLabel" placeholder="商品标签" clearable style="width: 120px" class="filter-item">
-        <el-option value="招牌菜"></el-option>
+        <el-option
+          v-for="(item,index) in labelList"
+          :key="index"
+          :value="item">
+        </el-option>
       </el-select>
       <el-select v-model="listQuery.goodsStatus" placeholder="商品状态" clearable style="width: 120px" class="filter-item">
         <el-option value="0" label="已下架"></el-option>
@@ -186,9 +190,9 @@
           label="商品标签:">
           <el-select v-model="goodsForm.goodsLabel" placeholder="请选择" filterable allow-create>
             <el-option
-              v-for="item in allGoodsLabel"
-              :key="item.goodsLabel"
-              :value="item.goodsLabel">
+              v-for="(item,index) in labelList"
+              :key="index"
+              :value="item">
             </el-option>
           </el-select>
         </el-form-item>
@@ -233,7 +237,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
-import { getList, addGoods, updateGoods, changeGoodsStatus, deleteGoods } from '@/api/goods'
+import { getList, addGoods, updateGoods, changeGoodsStatus, deleteGoods, selGoodsLabel } from '@/api/goods'
 export default {
   name: "Product",
   components: {
@@ -281,6 +285,7 @@ export default {
         goodsLabel: '',
         goodsStatus: ''
       },
+      labelList: [],
       goodsForm: {
         goodsName: '',
         goodsLabel: '',
@@ -333,6 +338,11 @@ export default {
       }).catch(() => {
           this.tableLoading = false
       })
+    },
+    selGoodsLabel(){
+        selGoodsLabel().then(response => {
+            this.labelList = response.data;
+        })
     },
     addGoods () {
       this.$refs.goodsForm.validate(valid =>{
@@ -473,7 +483,8 @@ export default {
     }
   },
   mounted () {
-    this.getList()
+      this.selGoodsLabel();
+      this.getList();
   }
 }
 </script>
