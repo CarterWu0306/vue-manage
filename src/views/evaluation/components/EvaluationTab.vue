@@ -21,12 +21,10 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '全部评价', key: 'AllEvaluation', sum: 0 },
-        { label: '未回复评价', key: 'NoReplyEvaluation', sum: '0' }
+          { label: '未回复评价', key: 'NoReplyEvaluation' },
+          { label: '全部评价', key: 'AllEvaluation' }
       ],
-      tabType: 'AllEvaluation',
-      allEvaluation: 100,
-      noReplyEvaluation: 0
+      tabType: 'NoReplyEvaluation',
     }
   }
 }
