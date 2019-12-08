@@ -137,7 +137,7 @@
           width="200"
           align="center">
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" @click="handleCreate(row)">
               回复
             </el-button>
             <el-button size="mini" type="danger" @click="deleteRow(row)">
@@ -156,13 +156,29 @@
       @pagination="pagination"
       style="padding: 20px 16px 0px 16px;">
     </pagination>
+
+    <el-dialog
+      title="回复评价"
+      width="600px"
+      @close="resetReplyForm"
+      :visible.sync="dialogVisible"
+      center>
+      <el-form ref="replyForm" :model="replyForm" label-width="80px">
+        <el-form-item label="活动形式">
+          <el-input type="textarea" v-model="replyForm.replyContent"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button type="primary" :loading="loading" @click="reply">确认回复</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
-import { getEvaluationList, deleteEvaluation } from '@/api/evaluation'
+import { getEvaluationList, deleteEvaluation, reply} from '@/api/evaluation'
 
 export default {
     name: "EvaluationDetail",
@@ -181,7 +197,14 @@ export default {
             tabType: this.tabType
           },
           tableData: [],
-          tableLoading: false
+          replyForm: {
+              evaluationId: '',
+              replyContent: '',
+              replyTime: new Date()
+          },
+          tableLoading: false,
+          dialogVisible: false,
+          loading: false
       }
     },
     methods: {
@@ -220,6 +243,35 @@ export default {
                 })
                 this.tableData = data;
             }).catch()
+        },
+        resetReplyForm(){
+            this.replyForm = {
+                evaluationId: '',
+                replyContent: '',
+                replyTime: new Date()
+            }
+        },
+        handleCreate(row) {
+            this.dialogVisible = true;
+            this.replyForm = {
+                evaluationId: row.evaluationId,
+                replyContent: row.replyContent,
+                replyTime: new Date()
+            }
+        },
+        reply(){
+            this.loading = true;
+            reply(this.replyForm).then(response => {
+                this.loading = false;
+                this.dialogVisible = false;
+                this.$message({
+                    message: response.message,
+                    type: 'success'
+                });
+                this.getEvaluationList();
+            }).catch(() => {
+                this.loading = false;
+            })
         },
         deleteRow(row){
             this.$confirm('此操作将永久删除该评价, 是否继续?', '提示', {
