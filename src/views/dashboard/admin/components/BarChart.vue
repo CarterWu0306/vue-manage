@@ -45,11 +45,7 @@ export default {
                 const data = response.data;
                 data.forEach(item =>{
                     const index = item.dayOfWeek;
-                    if (index ===1){
-                        this.chartData[6] = item.sum;
-                    }else{
-                        this.chartData[index-2] = item.sum;
-                    }
+                    this.chartData[index-1] = item.sum;
                 });
                 this.initChart();
             }).catch(() => {
@@ -83,7 +79,7 @@ export default {
             },
             xAxis: [{
               type: 'category',
-              data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+              data: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
               axisTick: {
                 alignWithLabel: true
               }
