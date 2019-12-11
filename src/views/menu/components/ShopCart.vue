@@ -112,6 +112,7 @@ export default {
       if (this.foods[index].goodsNum > 0) {
         this.foods[index].goodsNum--
       }
+      this.selected()
     },
     backContinue() {
       this.dialogFormVisible = false
