@@ -60,11 +60,11 @@
               <el-form-item label="评价内容:">
                 <span>{{ row.content }}</span>
               </el-form-item>
-              <el-form-item label="回复内容:">
-                <span>{{ row.replyContent }}</span>
-              </el-form-item>
               <el-form-item label="评价时间:">
                 <span>{{ formatDate(row.createTime) }}</span>
+              </el-form-item>
+              <el-form-item label="回复内容:">
+                <span>{{ row.replyContent }}</span>
               </el-form-item>
               <el-form-item label="回复时间:">
                 <span>{{ formatDate(row.replyTime) }}</span>
