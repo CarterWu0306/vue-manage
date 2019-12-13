@@ -164,7 +164,7 @@
       :visible.sync="dialogVisible"
       center>
       <el-form ref="replyForm" :model="replyForm" label-width="80px">
-        <el-form-item label="活动形式">
+        <el-form-item label="回复内容">
           <el-input type="textarea" v-model="replyForm.replyContent"></el-input>
         </el-form-item>
       </el-form>
