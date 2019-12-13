@@ -125,7 +125,7 @@
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          width="150"
+          width="180"
           label="点评时间"
           prop="createTime"
           align="center"
