@@ -88,6 +88,20 @@ export const constantRoutes = [
         meta: { title: '评价管理', icon: 'like' }
       }
     ]
+  },
+
+  {
+    path: '/activity',
+    component: Layout,
+    redirect: '/activity/index',
+    children: [
+      {
+        path: 'user-evaluation',
+        component: () => import('@/views/activity/index'),
+        name: 'Activity',
+        meta: { title: '秒杀活动', icon: 'alarm' }
+      }
+    ]
   }
 
   // 404 page must be placed at the end !!!
