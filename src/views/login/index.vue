@@ -72,10 +72,10 @@
                   </el-button>
                 </div>
 
-                <div class="tips" style="font-size: 20px">
+                <div class="tips" style="font-size: 20px;">
                   测试用户:
-                  <span style="margin-right:20px;">username: admin</span>
-                  <span> password: any</span>
+                  <span style="margin-right:80px;">帐号: admin</span>
+                  <span> 密码: 123123</span>
                 </div>
               </el-form>
             </div>
