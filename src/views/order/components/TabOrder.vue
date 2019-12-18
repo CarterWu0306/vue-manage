@@ -487,14 +487,29 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
           }).then(response => {
-              deleteOrder({ orderId: row.orderId }).then(response =>{
-                  this.$message({
-                      message: response.message,
-                      type: 'success'
-                  })
-                  this.getOrderList()
-              }).catch(() => {
+              let canVisti = false;
+              const roleList = this.$store.getters.roles;
+              roleList.forEach(index => {
+                  if (index.roleCode === 'ROLE_MANAGER') {
+                      canVisti = true
+                  }
               })
+              if (canVisti){
+                  deleteOrder({ orderId: row.orderId }).then(response =>{
+                      this.$message({
+                          message: response.message,
+                          type: 'success'
+                      })
+                      this.getOrderList()
+                  }).catch(() => {
+                  })
+              }else{
+                  this.$message({
+                      message: '没有权限,请联系店长',
+                      type: 'warning'
+                  })
+              }
+
           }).catch(() => {
               this.$message({
                   type: 'info',
