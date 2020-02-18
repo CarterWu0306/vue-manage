@@ -270,17 +270,9 @@ export default {
     return {
       tableData: [],
       total: 0,
-      allGoodsLabel: [
-        {
-          goodsLabel: '招牌菜'
-        },
-        {
-          goodsLabel: '凉菜'
-        }
-      ],
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 20,
         goodsName: '',
         goodsLabel: '',
         goodsStatus: ''
